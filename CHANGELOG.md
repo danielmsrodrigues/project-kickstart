@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.5.2] - 2026-11-20
+
+### Fixed
+
+- Contrast is computed, never estimated. `build_tokens.py contrast` checks every text/background pair, every filled button and status color against the ink declared on it (`textOn`), and borders and focus rings at 3:1, in light and dark. A fill with no declared ink fails, so no pair goes unchecked. `--pairs` checks a draft palette before any tokens file exists.
+- `/kickstart` must run it before showing a visual direction and again after writing the tokens. `/kickstart-design` runs it on every new export and when adopting. Found by a test where a proposed "ready" green failed with both white and dark text, which the model had not checked.
+- The example tokens failed their own check in dark mode (button text and active state); fixed.
+
 ## [0.5.1] - 2026-11-20
 
 ### Fixed

@@ -25,7 +25,9 @@ One question, three choices, as buttons when you have the question tool. Ask it 
   - if `frontend-design` is available, invoke it and take its direction;
   - otherwise propose one yourself: a one-sentence direction, a 4-6 color palette, one or two type families with a scale, a spacing scale.
 
-  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why. Then show it and get a yes.
+  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why.
+
+  **Then compute contrast; never estimate it.** List every pair the design will actually use: each text color on each background, the text on every filled button, badge and status color (such as a "ready" pill), and borders and focus rings on the backgrounds, in light and dark. Run `python3 <skill>/scripts/build_tokens.py contrast --pairs "FG:BG" ...` (add `:3` for borders and focus rings). Fix every FAIL before showing anything; the user is not expected to catch contrast problems. Show the ratios from the script output, not your own. Then show the direction and get a yes.
 
 ## 2. Tokens
 
@@ -38,8 +40,9 @@ Settle the values for `design/tokens.json` (W3C DTCG) with the structure of `tok
   - `ink.on-action`, `ink.on-danger` and `ink.danger`
   - `size.touch-target`, `size.border` and `size.focus-ring`
 
-  Derive them from the palette, and check text-on-fill contrast in both modes.
+  Derive them from the palette.
 - **Aliases:** semantic tokens alias primitives, and dark values (`$extensions.modes.dark`) are aliases too.
+- **Contrast is declared, then checked by the script.** Every `color.action.*` and `color.status.*` fill gets `"$extensions": {"textOn": "{color.ink.<ink>}"}`, naming the ink used on it. Text that is itself colored (a red error message) is an `ink.*` token, not a status color. Divider-only edges get `"decorative": true`; the rest must reach 3:1. `python3 design/build_tokens.py contrast design/tokens.json` must pass before you show the token set and again after writing it.
 - **Names:** spacing as steps (`1x`, `2x`, `4x`), roles by meaning (`action.primary`, not `blue`). A font family and a font weight never share a name.
 
 In step 4:
@@ -70,4 +73,4 @@ List everything this step adds or changes in the step 3 format, as `create` and 
 
 ## Checks (step 4)
 
-The token build exits 0. `check` exits 0 on the UI source. The platform wiring is in place. Every `font.family` is loaded (on Apple platforms, every weight too). The project builds, and lints and type-checks when the dependencies are installed.
+The token build exits 0. `contrast design/tokens.json` exits 0. `check` exits 0 on the UI source. The platform wiring is in place. Every `font.family` is loaded (on Apple platforms, every weight too). The project builds, and lints and type-checks when the dependencies are installed.

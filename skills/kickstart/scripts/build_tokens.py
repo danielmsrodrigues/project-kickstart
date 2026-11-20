@@ -6,6 +6,8 @@ and optionally "$type". Aliases look like "{color.palette.ink}".
 Extensions this script reads from a token's "$extensions":
   "modes": {"dark": <value>}   dark-mode value (alias or literal)
   "lineHeight": 1.5            on font size tokens: paired line height
+  "textOn": "{color.ink.on-action}"   on a fill color that carries text: the ink used on it
+  "decorative": true           on an edge color only used for dividers: no 3:1 requirement
 
 Groups named "palette" (e.g. color.palette.*) are primitives: they exist for
 aliases. CSS keeps them as variables but gives them no Tailwind utilities;
@@ -22,8 +24,17 @@ Usage (Python 3.8+, standard library only):
   python3 design/build_tokens.py build design/tokens.json --ts src/theme/theme.ts
   python3 design/build_tokens.py diff  design/tokens.json candidate.json
   python3 design/build_tokens.py check src [more paths] [--allow GLOB ...]
+  python3 design/build_tokens.py contrast design/tokens.json
+  python3 design/build_tokens.py contrast --pairs "#ffffff:#b4234f" "#3a2320:#6e8f5a:4.5" ...
 
-Exit codes: 0 ok, 1 check found hardcoded values or diff found changes, 2 bad input.
+Exit codes: 0 ok, 1 check found hardcoded values, diff found changes or contrast failed, 2 bad input.
+
+contrast checks WCAG 2 ratios, in light and dark mode:
+  - every color.ink.* except on-* against every color.surface.*: 4.5:1 (text)
+  - every fill in color.action.* and color.status.* against its textOn ink: 4.5:1;
+    a fill without textOn fails, so no text/fill pair goes unchecked
+  - every color.edge.* (unless "decorative") and color.action.focus against every
+    color.surface.*: 3:1 (borders that identify a control, focus rings)
 """
 import argparse
 import fnmatch
@@ -72,10 +83,12 @@ def flatten(tree, path=(), inherited_type=None, out=None):
         if "$value" in node:
             ext = node.get("$extensions", {})
             out[p] = {"value": node["$value"], "type": node.get("$type", group_type),
-                      "dark": ext.get("modes", {}).get("dark"), "line_height_of": None}
+                      "dark": ext.get("modes", {}).get("dark"), "line_height_of": None,
+                      "text_on": ext.get("textOn"), "decorative": bool(ext.get("decorative"))}
             if "lineHeight" in ext:
                 out[p[:-1] + (key + "-line-height",)] = {"value": ext["lineHeight"], "type": "number",
-                                                         "dark": None, "line_height_of": p}
+                                                         "dark": None, "line_height_of": p, "text_on": None,
+                                                         "decorative": False}
         else:
             flatten(node, p, group_type, out)
     return out
@@ -483,6 +496,80 @@ def check(paths, allow):
     return 1 if hits else 0
 
 
+# ---------- contrast ----------
+
+def luminance(hex_value):
+    c = rgba(hex_value)
+    if not c:
+        raise TokenError(f"contrast needs hex colors, got {hex_value}")
+    lin = [x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c[:3]]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def ratio(fg, bg):
+    a, b = sorted((luminance(fg), luminance(bg)), reverse=True)
+    return (a + 0.05) / (b + 0.05)
+
+
+def contrast_pairs(specs):
+    fails = 0
+    for spec in specs:
+        parts = spec.split(":")
+        if len(parts) not in (2, 3):
+            raise TokenError(f"pair must be FG:BG or FG:BG:MIN, got {spec}")
+        need = float(parts[2]) if len(parts) == 3 else 4.5
+        r = ratio(parts[0], parts[1])
+        ok = r >= need
+        fails += not ok
+        print(f"{'ok  ' if ok else 'FAIL'}  {r:5.2f}:1  (need {need:g})  {parts[0]} on {parts[1]}")
+    return 1 if fails else 0
+
+
+def contrast_tokens(path):
+    raw = flatten(load(path))
+    tokens = resolve(raw)
+    color = {p: t for p, t in tokens.items() if category(p) == "color" and not is_primitive(p)}
+    group = lambda p: p[1] if len(p) > 2 else ""
+    name = lambda p: ".".join(p[1:])
+    inks = [p for p in color if group(p) == "ink" and not p[-1].startswith("on-")]
+    surfaces = [p for p in color if group(p) == "surface"]
+    fills = [p for p in color if group(p) in ("action", "status") and "focus" not in p[-1]]
+    edges = [p for p in color if (group(p) == "edge" and not raw[p].get("decorative"))
+             or (group(p) == "action" and "focus" in p[-1])]
+    rows, fails = [], 0
+
+    def check(fg, bg, need, why):
+        nonlocal fails
+        for mode in ("light", "dark"):
+            pick = lambda p: color[p]["dark"] if mode == "dark" and color[p]["dark"] is not None else color[p]["value"]
+            r = ratio(pick(fg), pick(bg))
+            ok = r >= need
+            fails += not ok
+            rows.append((ok, r, need, mode, f"{name(fg)} on {name(bg)}", why))
+
+    for s in surfaces:
+        for i in inks:
+            check(i, s, 4.5, "text")
+        for e in edges:
+            check(e, s, 3.0, "UI part")
+    for f in fills:
+        alias = raw[f].get("text_on")
+        m = ALIAS.match(alias) if isinstance(alias, str) else None
+        target = tuple(m.group(1).split(".")) if m else None
+        if target not in color:
+            fails += 1
+            rows.append((False, 0, 4.5, "-", f"{name(f)}", 'fill with no "textOn": declare the ink used on it'))
+            continue
+        check(target, f, 4.5, "text on fill")
+    if not surfaces:
+        print("note: no color.surface.* tokens; text contrast was not checked", file=sys.stderr)
+    for ok, r, need, mode, pair, why in sorted(rows, key=lambda x: (x[0], x[1])):
+        shown = f"{r:5.2f}:1" if r else "   -   "
+        print(f"{'ok  ' if ok else 'FAIL'}  {shown}  (need {need:g})  {mode:5}  {pair}  [{why}]")
+    print(f"\n{len(rows) - fails} passed, {fails} failed")
+    return 1 if fails else 0
+
+
 # ---------- CLI ----------
 
 def main(argv=None):
@@ -498,6 +585,9 @@ def main(argv=None):
     d = sub.add_parser("diff")
     d.add_argument("old")
     d.add_argument("new")
+    k = sub.add_parser("contrast")
+    k.add_argument("source", nargs="?")
+    k.add_argument("--pairs", nargs="+")
     c = sub.add_parser("check")
     c.add_argument("paths", nargs="+")
     c.add_argument("--allow", nargs="*", default=[])
@@ -507,6 +597,12 @@ def main(argv=None):
             return diff(a.old, a.new)
         if a.cmd == "check":
             return check(a.paths, a.allow)
+        if a.cmd == "contrast":
+            if a.pairs:
+                return contrast_pairs(a.pairs)
+            if not a.source:
+                raise TokenError("give a tokens file or --pairs")
+            return contrast_tokens(a.source)
         tokens = resolve(flatten(load(a.source)))
         if not tokens:
             raise TokenError(f"{a.source}: no tokens found (tokens need a \"$value\")")

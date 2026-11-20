@@ -39,7 +39,7 @@ Until the user says yes, the repo stays untouched: draft and build in a temporar
 
 1. **Draft** the tokens file in the temporary directory: every value from the current source, in W3C DTCG with the structure of `<skill>/../kickstart/templates/_design-system/tokens.example.json`. Keep the existing names wherever they already describe a role, so usages don't change. Where a name is a raw value (`blue-600`), propose a role name.
 2. **Framework defaults the code relies on.** With Tailwind v4 the generator clears the default color palette, so every class that uses it (`text-white`, `bg-gray-100`, `border-red-500`) would silently lose its color. Search for them, give each one a role token with the exact same value, and add them to the renames.
-3. **Build and compare.** Build the draft with `python3 <skill>/../kickstart/scripts/build_tokens.py build <draft> --css <tmp>/tokens.css ...`. The values must match the current source exactly, except for the listed renames.
+3. **Build, compare, and check contrast.** Run `python3 <skill>/../kickstart/scripts/build_tokens.py contrast <draft>`, and report failures as findings: adopting must not change the look, so fixing them is a follow-up, not part of adopting. Then build the draft with `python3 <skill>/../kickstart/scripts/build_tokens.py build <draft> --css <tmp>/tokens.css ...`. The values must match the current source exactly, except for the listed renames.
 4. **Show and wait.** Show the token list, the renames with their usage counts, and the files that would change. Wait for a yes.
 5. **On yes:**
    - Write `design/tokens.json`, and `cp` the script to `design/build_tokens.py`.
