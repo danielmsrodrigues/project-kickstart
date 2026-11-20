@@ -17,7 +17,7 @@ Gives a new or empty repo what an agent and a human need on day one: a short `CL
 - **Never overwrite an existing file.** Show a diff and ask.
 - **Nothing is written or run before the list is confirmed** (step 3). No `git init` or commit before its own yes (step 5).
 - **Ask only what changes the output**, and only what the request and repo don't answer, one question per message. When the choices can be named (stack, template, design origin, confirming the list, git), ask with the structured question tool if you have one (`AskUserQuestion` in Claude Code): two to four options, recommendation first. Questions about purpose stay open text.
-- **Docs in the user's language** if they ask; otherwise English. File names in English.
+- **Language.** Code, identifiers, file names and technical docs (`CLAUDE.md`, `ARCHITECTURE.md`, `CONVENTIONS.md`, ADRs) are in English by default. If the user writes in another language and hasn't said which they want, ask once with buttons ("English (recommended)" / their language); an existing repo keeps the language its docs already use. The app's own text (UI copy) follows the product's audience, from the design. Never present a language choice as a rule.
 - **Real beats default.** Commands, paths and names in the repo win over templates. A `stack.md` default goes in only when the repo defines nothing, and is marked unverified. **Unknown is a valid answer:** it goes under "Open questions", never guessed.
 - **Work in few round trips.** Each tool call re-reads the whole context, so:
   - Read what a step needs in one parallel batch, and write independent files in one batch.

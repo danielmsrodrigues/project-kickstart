@@ -25,7 +25,7 @@ One question, three choices, as buttons when you have the question tool. Ask it 
   - if `frontend-design` is available, invoke it and take its direction;
   - otherwise propose one yourself: a one-sentence direction, a 4-6 color palette, one or two type families with a scale, a spacing scale.
 
-  Show it and get a yes.
+  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why. Then show it and get a yes.
 
 ## 2. Tokens
 

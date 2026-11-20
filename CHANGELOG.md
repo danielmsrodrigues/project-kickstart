@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.5.1] - 2026-11-20
+
+### Fixed
+
+- Docs language is asked, not imposed: technical docs stay in English by default, but when the user writes in another language the skill asks once (English recommended), and an existing repo keeps its docs language. UI copy follows the product's audience. Code and file names stay in English.
+- The visual direction is no longer settled in the Superpowers spec, where it skipped the design review: the spec records only the user's own words about the look. Every direction, including one already in a spec, is checked in the design-system step against generic defaults (such as cream with terracotta and a serif display) and revised before it's shown.
+
 ## [0.5.0] - 2026-11-20
 
 ### Changed

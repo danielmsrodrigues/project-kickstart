@@ -139,8 +139,8 @@ Yes, in `/kickstart`, for any project with screens. `/kickstart-design` is only 
 **What if my project already has code?**
 `/kickstart` reads it, uses the commands it finds, and writes the guides around what's there. If it finds an existing set of colors and styles, it documents it rather than creating a second one, and offers `/kickstart-design` to organise it without changing how anything looks.
 
-**Can the docs be in my language?**
-Yes, just ask (for example "write the docs in Portuguese"). English is the default.
+**What language are the docs in?**
+English by default, like the code. If you write to it in another language, it asks once whether you want the docs in English or in your language. An existing project keeps the language its docs already use. The app's own text (buttons, messages) follows who the app is for: a Portuguese bakery gets a Portuguese interface.
 
 **How do I get updates?**
 In Claude Code, type `/plugin`, open **Marketplaces**, choose **project-kickstart** and turn on **auto-update**. Or update by hand:
