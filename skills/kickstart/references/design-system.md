@@ -18,9 +18,14 @@ Look first: `tokens.*`, CSS full of `--color-*` variables, a Tailwind theme, a S
 
 ## 1. Origin
 
-One question, three choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation.
+One question, four choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation.
 
 - **a) Claude Design export or handoff**, or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../kickstart-design/references/design-import.md`.
+- **d) An existing brand** (a known company, the client's own identity): the look is the brand's, not ours to invent.
+  - **Who it's for.** Confirm, in one line, that the project is for the brand or with its permission (client, agency, in-house). If it isn't, say that using a real brand's identity without permission can infringe its trademark, and offer to build in a neutral style instead.
+  - **What to ask for:** the brand guidelines, logo files (SVG preferred), official colors, the typefaces and whether the project may use them (license), and any existing app or site to match. Take values exactly from these sources. A value read from a live site is marked as derived.
+  - **Never draw or recreate a logo or mark from memory.** Without the files, set the name in plain type and list the logo as missing. A licensed font that isn't provided gets the closest free alternative, named as a stand-in in DESIGN.md.
+  - **No visual research and no three directions.** The identity is given. The crafted depth here means only researching interface patterns for the job (`design-research.md`, layer 1) and the signature components.
 - **c) None.** Ask two or three questions, one per message, skipping what the design step answered: the tone (three words, and who uses it), references they like and why, what to avoid.
 
   Then ask the **depth**, once, as buttons. Recommend **Crafted** for a product with screens people will judge by its look:
