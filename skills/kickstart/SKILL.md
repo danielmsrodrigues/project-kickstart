@@ -66,10 +66,11 @@ Read `references/design-system.md` and follow it. It covers asking where the des
 2. Follow `references/generating-files.md`: the script makes `.gitignore`, `.editorconfig`, the settings JSON, `AGENTS.md` and the checks; you fill the doc templates.
 3. Write the design-system files from 3b.
 4. Run the checks, plus build, test and lint when the dependencies are installed. Fix what fails.
+5. With a design system, show it: follow `references/preview.md`. It generates a page of the tokens, publishes it when you can publish HTML pages, and ends with the link.
 
 ### 5. Git
 
-Report what was created and what failed. Then ask once whether to run `git init` (if needed) and make the initial commit. On yes, stage only the files this skill created or the user approved changing.
+Report what was created and what failed, with the design-system preview link or path first when there is one. Then ask once whether to run `git init` (if needed) and make the initial commit. On yes, stage only the files this skill created or the user approved changing.
 
 ### 6. Hand off
 

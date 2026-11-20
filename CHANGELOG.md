@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] - 2026-11-20
+
+### Added
+
+- The design system is shown, not just written. `build_tokens.py preview` renders the tokens as a page: colors in light and dark with their contrast, palette, type, spacing, sizes, radii, shadows and motion, with a light/dark switch. `/kickstart` generates it at the end of every UI kickstart, and `/kickstart-design` does it after every change or when asked ("show me the design system").
+- When an HTML publishing tool is available (Claude Artifacts), the page is published privately and the link is kept in `docs/DESIGN.md`, so later runs update the same link. Otherwise the user gets `design/preview.html`. `--google-fonts` and `--fragment` make the page fit such hosts.
+- An older `design/build_tokens.py` in a project is replaced with the plugin's version when a command it needs is missing.
+
 ## [0.5.3] - 2026-11-20
 
 ### Fixed

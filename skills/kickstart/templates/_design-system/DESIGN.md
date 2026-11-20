@@ -11,6 +11,7 @@ Delete this comment block.
 
 Source of truth: [`design/tokens.json`]({{RELATIVE PATH}}) → generated {{LIST OF GENERATED FILES, e.g. `src/styles/tokens.css`}} with `{{BUILD_TOKENS_COMMAND}}`. Never edit generated files by hand.
 Components: [{{COMPONENTS_DIR}}/README.md]({{RELATIVE PATH}}).
+Preview: {{PUBLISHED LINK, or `design/preview.html` (rebuild with the `preview` command) when there is no link}}
 {{ORIGIN LINE, e.g. "Imported from a Claude Design handoff on YYYY-MM-DD; external tools are import sources, not the source of truth."}}
 
 ## Tokens

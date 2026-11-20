@@ -14,4 +14,5 @@ Use when the project already has `design/tokens.json` and the user brings a new 
 4. **Blockers.** Removed tokens that are still in use are blockers; list each with `file:line`. On the web nothing fails at build time, because Tailwind drops the class silently. In Swift and TypeScript it is a compile error.
 5. **Component changes** the export implies (new components, variants), checked against the inventory: extend before adding.
 6. **Wait for a yes** (buttons when available). Apply only what's approved: `tokens.json`, rebuild, components, DESIGN.md, inventory.
-7. **Verify.** Removed tokens' forms have zero hits. `check`, lint and build pass. Offer a commit; don't make one unasked.
+7. **Verify.** Removed tokens' forms have zero hits. `check`, lint and build pass.
+8. **Show** the updated design system (`kickstart/references/preview.md`), then offer a commit; don't make one unasked.
