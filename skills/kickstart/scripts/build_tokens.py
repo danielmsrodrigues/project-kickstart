@@ -24,6 +24,11 @@ Usage (Python 3.8+, standard library only):
   python3 design/build_tokens.py build design/tokens.json --ts src/theme/theme.ts
   python3 design/build_tokens.py diff  design/tokens.json candidate.json
   python3 design/build_tokens.py check src [more paths] [--allow GLOB ...]
+  python3 design/build_tokens.py preview  design/tokens.json --out design/preview.html [--title NAME] [--css URL ...]
+                                          [--google-fonts] [--fragment]
+      --google-fonts links the font families from Google Fonts ("X Variable" is loaded as "X").
+      --fragment omits the <!doctype>/<html>/<head>/<body> wrapper, for hosts that add their own
+      (Claude Artifacts); combine with --google-fonts, since such hosts block other stylesheets.
   python3 design/build_tokens.py contrast design/tokens.json
   python3 design/build_tokens.py contrast --pairs "#ffffff:#b4234f" "#3a2320:#6e8f5a:4.5" ...
 
@@ -570,6 +575,154 @@ def contrast_tokens(path):
     return 1 if fails else 0
 
 
+# ---------- preview ----------
+
+def build_preview(tokens, raw, title, css_links, google_fonts=False, fragment=False):
+    """A standalone HTML page that shows the design system: colors in both modes with
+    contrast, type, spacing, sizes, radii, shadows and motion. Page chrome is neutral;
+    every sample is drawn with the project's own CSS variables."""
+    import html as h
+    if google_fonts:  # "Nunito Sans Variable" (Fontsource) is "Nunito Sans" on Google Fonts
+        tokens = {p: (dict(t, value=[t["value"][0], re.sub(r"\s+Variable$", "", t["value"][0])] + list(t["value"][1:]))
+                      if t["type"] == "fontFamily" and isinstance(t["value"], list) and t["value"][0].endswith(" Variable") else t)
+                  for p, t in tokens.items()}
+        names = []
+        for t in tokens.values():
+            if t["type"] == "fontFamily":
+                first = t["value"][0] if isinstance(t["value"], list) else str(t["value"])
+                name = re.sub(r"\s+Variable$", "", first)
+                if name not in names and name.lower() not in ("system-ui", "sans-serif", "serif", "monospace"):
+                    names.append(name)
+        if names:
+            fam = "&".join("family=" + n.replace(" ", "+") + ":wght@400;600;700" if n != "Shrikhand" else "family=Shrikhand"
+                           for n in names)
+            css_links = list(css_links) + [f"https://fonts.googleapis.com/css2?{fam}&display=swap"]
+    css, _ = build_css(tokens)
+    esc = lambda s: h.escape(str(s))
+    var = lambda p: f"var(--{kebab(p)})"
+    groups = {}
+    for p, t in tokens.items():
+        groups.setdefault(category(p), []).append((p, t))
+    colors = [(p, t) for p, t in groups.get("color", []) if not is_primitive(p)]
+    primitives = [(p, t) for p, t in groups.get("color", []) if is_primitive(p)]
+    surfaces = [p for p, _ in colors if len(p) > 2 and p[1] == "surface"]
+    base = surfaces[0] if surfaces else None
+
+    def code(p):
+        return f"<code>--{esc(kebab(p))}</code> <code>{esc(camel(p[1:]))}</code>"
+
+    def contrast_badge(fg, bg):
+        try:
+            light = ratio(tokens[fg]["value"], tokens[bg]["value"])
+            dark = ratio(tokens[fg]["dark"] or tokens[fg]["value"], tokens[bg]["dark"] or tokens[bg]["value"])
+        except TokenError:
+            return ""
+        def one(r, mode):
+            ok = r >= 4.5
+            return f'<span class="pv-badge {"pv-ok" if ok else "pv-bad"}">{mode} {r:.1f}:1</span>'
+        return one(light, "light") + one(dark, "dark")
+
+    rows = []
+    for p, t in colors:
+        group = p[1] if len(p) > 2 else ""
+        text_on = None
+        alias = raw.get(p, {}).get("text_on")
+        m = ALIAS.match(alias) if isinstance(alias, str) else None
+        if m and tuple(m.group(1).split(".")) in tokens:
+            text_on = tuple(m.group(1).split("."))
+        if group == "ink" and not p[-1].startswith("on-") and base:
+            sample = f'<div class="pv-chip" style="background:{var(base)};color:{var(p)}">Aa The quick brown fox</div>'
+            badge = contrast_badge(p, base)
+        elif text_on:
+            sample = f'<div class="pv-chip" style="background:{var(p)};color:{var(text_on)}">Aa Button text</div>'
+            badge = contrast_badge(text_on, p)
+        else:
+            sample = f'<div class="pv-chip" style="background:{var(p)}"></div>'
+            badge = ""
+        values = esc(t["value"]) + (f" / dark {esc(t['dark'])}" if t["dark"] is not None else "")
+        rows.append(f'<div class="pv-row">{sample}<div><b>{esc(".".join(p[1:]))}</b> {badge}<br>{code(p)}<br><small>{values}</small></div></div>')
+    prim = "".join(f'<div class="pv-prim"><div style="background:{var(p)}"></div><small>{esc(p[-1])}<br>{esc(t["value"])}</small></div>'
+                   for p, t in primitives)
+
+    fams = [(p, t) for p, t in groups.get("font", []) if t["type"] == "fontFamily"]
+    body = var(fams[0][0]) if fams else "inherit"
+    type_rows = "".join(
+        f'<div class="pv-row"><div style="font-family:{var(p)};font-size:28px">{esc(p[-1].title())} — Aa Bb Cc 0123</div><div>{code(p)}<br><small>{esc(css_value(t["value"]))}</small></div></div>'
+        for p, t in fams)
+    for p, t in groups.get("font", []):
+        if t["type"] in ("fontFamily", "fontWeight") or t["line_height_of"]:
+            continue
+        lh = p[:-1] + (p[-1] + "-line-height",)
+        lh_css = f";line-height:{var(lh)}" if lh in tokens else ""
+        type_rows += (f'<div class="pv-row"><div style="font-family:{body};font-size:{var(p)}{lh_css}">The quick brown fox jumps over the lazy dog</div>'
+                      f'<div><b>{esc(".".join(p[1:]))}</b><br>{code(p)}<br><small>{esc(css_value(t["value"]))}</small></div></div>')
+    for p, t in groups.get("font", []):
+        if t["type"] == "fontWeight":
+            type_rows += (f'<div class="pv-row"><div style="font-family:{body};font-size:22px;font-weight:{var(p)}">Weight {esc(t["value"])}</div>'
+                          f'<div><b>{esc(".".join(p[1:]))}</b><br>{code(p)}</div></div>')
+
+    def bars(cat, style):
+        return "".join(f'<div class="pv-row"><div class="pv-measure">{style(p)}</div><div><b>{esc(".".join(p[1:]))}</b> <small>{esc(css_value(t["value"]))}</small><br>{code(p)}</div></div>'
+                       for p, t in groups.get(cat, []))
+    surface = var(base) if base else "#fff"
+    spacing = bars("spacing", lambda p: f'<div style="width:{var(p)};height:16px;background:currentColor;opacity:.5"></div>')
+    sizes = bars("size", lambda p: f'<div style="width:min({var(p)},100%);height:12px;background:currentColor;opacity:.35"></div>')
+    radii = bars("radius", lambda p: f'<div style="width:72px;height:48px;border:2px solid currentColor;border-radius:{var(p)}"></div>')
+    shadows = bars("shadow", lambda p: f'<div style="width:96px;height:56px;background:{surface};box-shadow:{var(p)};border-radius:8px"></div>')
+    motion = bars("motion", lambda p: f'<div class="pv-move" style="transition-duration:{var(p)}"></div>')
+    links = "".join(f'<link rel="stylesheet" href="{esc(u)}">' for u in css_links)
+
+    def section(name, inner, note=""):
+        return f'<section><h2>{name}</h2>{f"<p class=pv-note>{note}</p>" if note else ""}{inner}</section>' if inner else ""
+
+    head = f"""<title>{esc(title)}</title>
+<meta name="claude:viewport-fit-sides" content="cover">{links}
+<style>
+{css}
+:root{{--pv-bg:#f5f5f4;--pv-fg:#1c1b1a;--pv-line:#1c1b1a24}}
+@media (prefers-color-scheme: dark){{:root:not([data-theme="light"]){{--pv-bg:#161615;--pv-fg:#ecebea;--pv-line:#ecebea24;color-scheme:dark}}}}
+:root[data-theme="dark"]{{--pv-bg:#161615;--pv-fg:#ecebea;--pv-line:#ecebea24;color-scheme:dark}}
+:root[data-theme="light"]{{color-scheme:light}}
+body{{margin:0;font:15px/1.5 system-ui,sans-serif;background:var(--pv-bg);color:var(--pv-fg)}}
+body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--pv-bg);z-index:10}}
+header{{position:sticky;top:env(safe-area-inset-top,0px);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--pv-bg);border-bottom:1px solid var(--pv-line);z-index:1}}
+main{{max-width:960px;margin:0 auto;padding-block:8px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+h1{{font-size:18px;margin:0}} h2{{font-size:13px;letter-spacing:.02em;margin:40px 0 12px;opacity:.7}}
+.pv-note{{opacity:.7;margin:-4px 0 12px}}
+.pv-row{{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:center;padding:10px 0;border-top:1px solid var(--pv-line)}}
+.pv-row>div{{min-width:0;overflow-wrap:anywhere}}
+.pv-chip{{height:56px;border-radius:8px;display:flex;align-items:center;padding:0 16px;font-size:18px;border:1px solid #8883}}
+.pv-prims{{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px}}
+.pv-prim div{{height:48px;border-radius:6px;border:1px solid #8883}}
+.pv-measure{{display:flex;align-items:center;min-height:24px}}
+.pv-move{{width:24px;height:24px;border-radius:50%;background:currentColor;opacity:.6;transition-property:transform}}
+.pv-row:hover .pv-move{{transform:translateX(160px)}}
+.pv-badge{{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;margin-left:4px}}
+.pv-ok{{background:#d7f0dc;color:#0d4d1f}} .pv-bad{{background:#fbd5d5;color:#7a0b0b}}
+button:focus-visible{{outline:2px solid currentColor;outline-offset:2px}}
+@media (prefers-reduced-motion: reduce){{.pv-move{{transition:none}}}}
+code{{font-size:12px;opacity:.75}} small{{opacity:.7}}
+button{{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #8886;background:transparent;color:inherit;cursor:pointer}}
+@media (max-width:640px){{.pv-row{{grid-template-columns:1fr}}}}
+</style>"""
+    page = f"""<header><h1>{esc(title)}</h1>
+<button type="button" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';this.textContent=r.dataset.theme==='dark'?'Light mode':'Dark mode'">Dark mode</button></header>
+<main>
+<p class="pv-note">Generated from <code>design/tokens.json</code>. Every sample uses the project's own tokens; badges are WCAG contrast (4.5:1 for text). Rebuild after changing the tokens.</p>
+{section("Colors", "".join(rows), "Text colors are shown on " + (esc(".".join(base[1:])) if base else "the page") + "; fills with text show their declared ink.")}
+{section("Palette (primitives, for aliases only)", f'<div class="pv-prims">{prim}</div>' if prim else "")}
+{section("Type", type_rows)}
+{section("Spacing", spacing)}
+{section("Sizes", sizes)}
+{section("Radius", radii)}
+{section("Shadows", shadows)}
+{section("Motion", motion, "Hover a row to see the duration.")}
+</main>"""
+    if fragment:
+        return head + "\n" + page + "\n"
+    return f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n{head}</head>\n<body>{page}</body></html>\n'
+
+
 # ---------- CLI ----------
 
 def main(argv=None):
@@ -585,6 +738,13 @@ def main(argv=None):
     d = sub.add_parser("diff")
     d.add_argument("old")
     d.add_argument("new")
+    v = sub.add_parser("preview")
+    v.add_argument("source")
+    v.add_argument("--out", required=True)
+    v.add_argument("--title", default="Design system")
+    v.add_argument("--css", nargs="*", default=[], help="stylesheets to link, e.g. font CSS, relative to --out")
+    v.add_argument("--google-fonts", action="store_true")
+    v.add_argument("--fragment", action="store_true")
     k = sub.add_parser("contrast")
     k.add_argument("source", nargs="?")
     k.add_argument("--pairs", nargs="+")
@@ -597,6 +757,14 @@ def main(argv=None):
             return diff(a.old, a.new)
         if a.cmd == "check":
             return check(a.paths, a.allow)
+        if a.cmd == "preview":
+            raw = flatten(load(a.source))
+            page = build_preview(resolve(raw), raw, a.title, a.css, a.google_fonts, a.fragment)
+            os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
+            with open(a.out, "w", encoding="utf-8") as f:
+                f.write(page)
+            print(f"preview -> {a.out} (open it in a browser)")
+            return 0
         if a.cmd == "contrast":
             if a.pairs:
                 return contrast_pairs(a.pairs)

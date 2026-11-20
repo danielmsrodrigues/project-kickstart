@@ -1,6 +1,6 @@
 ---
 name: kickstart-design
-description: Brings a design into a project's design system in code. Use when the user has a new Claude Design export or handoff, Figma variables, a design-tokens file or a reference to apply to an existing project, says "sync the design system", "update the tokens", "import this design", or wants a project's hardcoded colors and CSS variables turned into a token source of truth (design/tokens.json).
+description: Brings a design into a project's design system in code. Use when the user has a new Claude Design export or handoff, Figma variables, a design-tokens file or a reference to apply to an existing project, says "sync the design system", "update the tokens", "import this design", "show me the design system", or wants a project's hardcoded colors and CSS variables turned into a token source of truth (design/tokens.json).
 argument-hint: "[path to the export, or what changed]"
 ---
 
@@ -25,6 +25,7 @@ Look at the repo once (one batch): `design/tokens.json`, other `tokens.*`, CSS c
 
 | The repo has | Mode |
 |--------------|------|
+| `design/tokens.json`, and the user only wants to see it | **Show**: follow `<skill>/../kickstart/references/preview.md` |
 | `design/tokens.json` | **Sync**: follow `references/design-sync.md` |
 | A design system in another form (CSS variables, a Tailwind theme, a `Theme` type) but no `tokens.json` | **Adopt**, below |
 | No design system | **Create**: follow `<skill>/../kickstart/references/design-system.md` from "1. Origin", and generate only the design-system files (no CLAUDE.md, ADR or configs). If the repo has no `CLAUDE.md` either, suggest `/kickstart` instead. |
@@ -51,3 +52,7 @@ Until the user says yes, the repo stays untouched: draft and build in a temporar
 6. Verify: compare the compiled output before and after (every class the app uses resolves to the same value), the build passes, `python3 design/build_tokens.py check <ui source>` runs (report its findings; fixing hardcoded values in screens is a follow-up, not part of adopting), and the UI looks the same where you can check it.
 
 If the user brought a new export too, adopt first, then sync the export.
+
+## After any change
+
+Whenever `design/tokens.json` was created or changed (sync, adopt, create), end by showing it: follow `<skill>/../kickstart/references/preview.md`. It republishes to the `Preview:` link in `docs/DESIGN.md` when there is one.

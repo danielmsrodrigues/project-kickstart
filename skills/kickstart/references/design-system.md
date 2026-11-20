@@ -73,4 +73,4 @@ List everything this step adds or changes in the step 3 format, as `create` and 
 
 ## Checks (step 4)
 
-The token build exits 0. `contrast design/tokens.json` exits 0. `check` exits 0 on the UI source. The platform wiring is in place. Every `font.family` is loaded (on Apple platforms, every weight too). The project builds, and lints and type-checks when the dependencies are installed.
+The token build exits 0. `contrast design/tokens.json` exits 0. The preview page is generated (and published when possible), as `references/preview.md` says. `check` exits 0 on the UI source. The platform wiring is in place. Every `font.family` is loaded (on Apple platforms, every weight too). The project builds, and lints and type-checks when the dependencies are installed.

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "project-kickstart",
   "displayName": "Project Kickstart",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "Kickstart new or existing repos for AI agents (/kickstart) and keep their design system in code in sync with Claude Design, Figma or token exports (/kickstart-design).",
   "author": {
     "name": "Daniel Rodrigues",
