@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.5.3] - 2026-11-20
+
+### Fixed
+
+- Scaffolding into a temporary directory no longer lands inside the repo. create-vite treats an absolute target such as `/var/folders/.../app` as relative, so `npx create-vite@latest "$(mktemp -d)/app"` created `./var/folders/.../app` in the current folder. The scaffold commands now `cd` into the temporary directory and pass a relative name (`app`); create-next-app follows the same pattern for consistency. Found while kickstarting a sample Vite app.
+
 ## [0.5.2] - 2026-11-20
 
 ### Fixed

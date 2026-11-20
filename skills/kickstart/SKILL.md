@@ -44,7 +44,7 @@ Read `references/stacks.md`. Detect the stack from the files present and read th
 One message with the design summary and every action:
 
 ```
-run      npx --yes create-vite@latest <tmp> --template react-ts --eslint --no-interactive --no-immediate
+run      cd <tmp> && npx --yes create-vite@latest app --template react-ts --eslint --no-interactive --no-immediate
 run      npm install
 create   CLAUDE.md
 symlink  AGENTS.md -> CLAUDE.md
@@ -86,6 +86,7 @@ A project that already has a design system and a new Claude Design, Figma or tok
 | Writing right after the design | The list in step 3 always comes first. |
 | Replacing a user's README or `.gitignore` | Diff and ask; appending is a change too. |
 | A scaffolder running `git init`, or refusing a non-empty folder | Use the flags in `stack.md` and a temp directory. |
+| Passing the absolute `mktemp -d` path to create-vite | It lands in `./var/folders/...` inside the repo; `cd` into the temp directory and pass `app`. |
 | `CLAUDE.md` restating the docs | Keep the rules an agent would get wrong; link the rest. |
 | Leftover `{{PLACEHOLDER}}` or TODO sections | Fill them or delete the section. |
 | A second design system next to an existing one | Document and extend the one that's there. |
