@@ -21,3 +21,4 @@ Thumbs.db
 
 # Generated design-system preview (rebuild with design/build_tokens.py preview)
 design/preview.html
+.design-system/

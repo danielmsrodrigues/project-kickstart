@@ -14,6 +14,10 @@ Components: [{{COMPONENTS_DIR}}/README.md]({{RELATIVE PATH}}).
 Preview: {{PUBLISHED LINK, or `design/preview.html` (rebuild with the `preview` command) when there is no link}}
 {{ORIGIN LINE, e.g. "Imported from a Claude Design handoff on YYYY-MM-DD; external tools are import sources, not the source of truth."}}
 
+## References
+
+{{CRAFTED DEPTH ONLY: the chosen direction's drawing, [docs/design/direction.html](design/direction.html), as the visual reference for screens; then the 6-8 references from the research, each "[name](link): what was taken from it" (a principle, never a copied layout). Delete this section for the quick depth.}}
+
 ## Tokens
 
 | Group | Tokens | Use for |

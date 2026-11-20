@@ -21,7 +21,11 @@ Look first: `tokens.*`, CSS full of `--color-*` variables, a Tailwind theme, a S
 One question, three choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation.
 
 - **a) Claude Design export or handoff**, or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../kickstart-design/references/design-import.md`.
-- **c) None.** Ask two or three questions, one per message, skipping what the design step answered: the tone (three words, and who uses it), references they like and why, what to avoid. Then:
+- **c) None.** Ask two or three questions, one per message, skipping what the design step answered: the tone (three words, and who uses it), references they like and why, what to avoid.
+
+  Then ask the **depth**, once, as buttons. Recommend **Crafted** for a product with screens people will judge by its look:
+  - **Crafted**: research references (Dribbble, Behance, Mobbin, modern sites, the product's physical world), draw three directions on a real screen of the app, and design the product's signature components. About twice the cost of this step. Follow `design-research.md`, then continue at the contrast check below.
+  - **Quick**: one direction, proposed in text, as follows.
   - if `frontend-design` is available, invoke it and take its direction;
   - otherwise propose one yourself: a one-sentence direction, a 4-6 color palette, one or two type families with a scale, a spacing scale.
 
@@ -55,7 +59,7 @@ In step 4:
 
 ## 3. Components
 
-The six in `components-spec.md`, in the platform's idiom and location. With a component library, follow "Component libraries" in `platforms/other.md`. For UI code, invoke `frontend-design` when available.
+The six in `components-spec.md`, in the platform's idiom and location, shown in every variant by the published design system (`references/preview.md`). With a component library, follow "Component libraries" in `platforms/other.md`. For UI code, invoke `frontend-design` when available.
 
 ## 4. Docs
 
@@ -69,7 +73,7 @@ Add the lint warning from the platform file to the linter the project has. With 
 
 ## Files and confirmation
 
-List everything this step adds or changes in the step 3 format, as `create` and `exists`/`edit` lines: the tokens, the generated output, the six components, the inventory, `DESIGN.md`, and the CSS entry, `package.json` and lint config edits. Get a yes before step 4.
+List everything this step adds or changes in the step 3 format, as `create` and `exists`/`edit` lines: the tokens, the generated output, the six components, the inventory, `design/system/` (the components build for the published design system, web only), `DESIGN.md`, and the CSS entry, `package.json` and lint config edits. Get a yes before step 4.
 
 ## Checks (step 4)
 

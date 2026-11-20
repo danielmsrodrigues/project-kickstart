@@ -25,10 +25,21 @@ Usage (Python 3.8+, standard library only):
   python3 design/build_tokens.py diff  design/tokens.json candidate.json
   python3 design/build_tokens.py check src [more paths] [--allow GLOB ...]
   python3 design/build_tokens.py preview  design/tokens.json --out design/preview.html [--title NAME] [--css URL ...]
-                                          [--google-fonts] [--fragment]
+                                          [--google-fonts] [--fragment] [--design-md docs/DESIGN.md]
+                                          [--components components/index.html]
+      --design-md shows the direction sentence and the "Avoid" list from DESIGN.md at the top.
+      --components embeds a built component gallery page (path relative to --out) above the tokens.
       --google-fonts links the font families from Google Fonts ("X Variable" is loaded as "X").
       --fragment omits the <!doctype>/<html>/<head>/<body> wrapper, for hosts that add their own
       (Claude Artifacts); combine with --google-fonts, since such hosts block other stylesheets.
+  python3 design/build_tokens.py design-system design/tokens.json --out <dir>/project --title NAME [--node-modules node_modules]
+      Writes tokens.json (+ the first tokens.css, + font files found in Fontsource packages) in the
+      format of Claude's "Design System" artifact type: color themes light/dark, aliases kept,
+      a usage note on every token, type families/fonts/styles, spacing, radius, shadow, size, duration.
+  python3 design/build_tokens.py ds-bundle --dist .design-system --namespace NAME --components Button,Input,... --out <dir>/project
+      Finishes a components build for the same format: the @ds-bundle header on bundle.js, @font-face
+      rules removed from bundle.css (tokens.css declares the fonts), forbidden "</script"/"<!--" checks,
+      copied to components/bundle.js and components/bundle.css.
   python3 design/build_tokens.py contrast design/tokens.json
   python3 design/build_tokens.py contrast --pairs "#ffffff:#b4234f" "#3a2320:#6e8f5a:4.5" ...
 
@@ -578,7 +589,22 @@ def contrast_tokens(path):
 
 # ---------- preview ----------
 
-def build_preview(tokens, raw, title, css_links, google_fonts=False, fragment=False):
+def design_md_summary(path):
+    """Direction sentence and Avoid bullets from DESIGN.md (template headings)."""
+    try:
+        text = open(path, encoding="utf-8").read()
+    except OSError:
+        return None, []
+    m = re.search(r"\*\*Direction:\*\*\s*(.+)", text)
+    direction = m.group(1).strip() if m else None
+    avoid = []
+    sec = re.search(r"^##\s+Avoid\s*$(.*?)(?=^##\s|\Z)", text, re.M | re.S)
+    if sec:
+        avoid = [re.sub(r"[*_`]", "", l[2:]).strip() for l in sec.group(1).splitlines() if l.startswith(("- ", "* "))]
+    return direction, avoid
+
+
+def build_preview(tokens, raw, title, css_links, google_fonts=False, fragment=False, design_md=None, components=None):
     """A standalone HTML page that shows the design system: colors in both modes with
     contrast, type, spacing, sizes, radii, shadows and motion. Page chrome is neutral;
     every sample is drawn with the project's own CSS variables."""
@@ -736,6 +762,19 @@ def build_preview(tokens, raw, title, css_links, google_fonts=False, fragment=Fa
     motion = "".join(row(p, t, f'<div class="pv-move" style="transition-duration:{var(p)}"></div>') for p, t in groups.get("motion", []))
     links = "".join(f'<link rel="stylesheet" href="{esc(u)}">' for u in css_links)
 
+    direction, avoid = design_md_summary(design_md) if design_md else (None, [])
+    intro = ""
+    if direction or avoid:
+        intro = '<section class="pv-intro">' + (f'<p class="pv-direction">{esc(direction)}</p>' if direction else "")
+        if avoid:
+            intro += "<h2>Avoid</h2><ul>" + "".join(f"<li>{esc(a)}</li>" for a in avoid) + "</ul>"
+        intro += "</section>"
+    gallery = ""
+    if components:
+        gallery = (f'<section><h2>Components</h2><p class="pv-note">The app\'s real components, in every variant. '
+                   f'<a href="{esc(components)}" target="_blank" rel="noopener">Open on its own page</a>.</p>'
+                   f'<iframe class="pv-gallery" src="{esc(components)}" title="Components" loading="lazy"></iframe></section>')
+
     def section(name, inner, note=""):
         return f'<section><h2>{name}</h2>{f"<p class=pv-note>{note}</p>" if note else ""}{inner}</section>' if inner else ""
 
@@ -759,6 +798,10 @@ h1{{font-size:18px;margin:0}} h2{{font-size:13px;letter-spacing:.02em;margin:40p
 .pv-prims{{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px}}
 .pv-prim div{{height:48px;border-radius:6px;border:1px solid #8883}}
 .pv-measure{{display:flex;align-items:center;min-height:24px}}
+.pv-intro{{margin-top:16px}} .pv-direction{{font-size:20px;line-height:1.4;max-width:60ch;margin:16px 0}}
+.pv-intro ul{{margin:0;padding-left:20px;max-width:65ch}} .pv-intro li{{margin:4px 0}}
+.pv-gallery{{display:block;width:100%;height:80vh;min-height:520px;border:1px solid var(--pv-line);border-radius:8px;background:#fff;resize:vertical}}
+a{{color:inherit}}
 .pv-block{{display:inline-block;width:28px;height:28px;border-radius:4px;background:currentColor;opacity:.45}}
 .pv-ruler{{height:10px;border:1px solid currentColor;border-top:0;opacity:.6;margin-bottom:4px}}
 .pv-hint{{display:inline-block;margin-top:2px;font-size:13px;opacity:.85}}
@@ -776,6 +819,8 @@ button{{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #8886;b
 <button type="button" onclick="var r=document.documentElement;var dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark'">Switch light / dark</button></header>
 <main>
 <p class="pv-note">Generated from <code>design/tokens.json</code>. Every sample uses the project's own tokens; badges are WCAG contrast (4.5:1 for text). Rebuild after changing the tokens.</p>
+{intro}
+{gallery}
 {section("Colors", "".join(rows), "Text colors are shown on " + (esc(".".join(base[1:])) if base else "the page") + "; fills with text show their declared ink.")}
 {section("Palette (primitives, for aliases only)", f'<div class="pv-prims">{prim}</div>' if prim else "")}
 {section("Type", type_rows)}
@@ -788,6 +833,204 @@ button{{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #8886;b
     if fragment:
         return head + "\n" + page + "\n"
     return f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n{head}</head>\n<body>{page}</body></html>\n'
+
+
+# ---------- Claude "Design System" artifact format ----------
+
+ROLE_USAGE = {
+    "palette": "Primitive. Referenced by the role tokens; not used directly in screens.",
+    "ink": "Text and icons",
+    "surface": "Background",
+    "action": "Fill of interactive elements",
+    "edge": "Borders and dividers",
+    "status": "Status fill",
+}
+
+
+def ds_usage(p, t, raw, tokens):
+    if t.get("description"):
+        return t["description"]
+    cat = category(p)
+    if cat == "color":
+        group = p[1] if len(p) > 2 else ""
+        base = ROLE_USAGE.get(group, "Color")
+        if group == "ink" and p[-1].startswith("on-"):
+            return f"Text and icons on {p[-1][3:]} fills."
+        if group == "ink":
+            grounds = [kebab(q) for q in tokens if category(q) == "color" and len(q) > 2 and q[1] == "surface"]
+            return f"{base} ({p[-1]}) on " + (", ".join(f"`{g}`" for g in grounds) or "the page background") + "."
+        if group in ("action", "status"):
+            alias = raw.get(p, {}).get("text_on")
+            m = ALIAS.match(alias) if isinstance(alias, str) else None
+            on = f"; text on it in `{kebab(tuple(m.group(1).split('.')))}`" if m else ""
+            if "focus" in p[-1]:
+                return "Focus ring on interactive elements."
+            return f"{base}: {p[-1]}{on}."
+        if group == "edge":
+            return "Divider only (decorative)." if raw.get(p, {}).get("decorative") else "Borders that identify a control; 3:1 on every surface."
+        if group == "palette":
+            return ROLE_USAGE["palette"]
+        return f"{base}: {'.'.join(p[1:])}."
+    hint = {"spacing": "Gap or padding step", "radius": "Corner radius", "shadow": "Elevation",
+            "size": "Fixed size", "motion": "Duration"}.get(cat, "")
+    return f"{hint}: {p[-1]}." if hint else ""
+
+
+def ds_color_value(raw_value, resolved):
+    """Keep an alias when it points at another color token, else the resolved literal."""
+    if isinstance(raw_value, str):
+        m = ALIAS.match(raw_value)
+        if m:
+            return "{" + kebab(tuple(m.group(1).split("."))) + "}"
+    return resolved
+
+
+def find_font_files(family, node_modules):
+    """Fontsource files for a family: latin normal woff2, one per weight (or the variable file)."""
+    import glob
+    slug = re.sub(r"\s+Variable$", "", family).strip().lower().replace(" ", "-")
+    found = []
+    for pkg in (f"@fontsource-variable/{slug}", f"@fontsource/{slug}"):
+        for f in sorted(glob.glob(os.path.join(node_modules, pkg, "files", f"{slug}-latin-*-normal.woff2"))):
+            m = re.search(r"-latin-([a-z0-9]+)-normal\.woff2$", f)  # skips latin-ext
+            if not m:
+                continue
+            w = m.group(1)
+            weight = "100 900" if not w.isdigit() else w
+            found.append((f, weight))
+        if found:
+            break
+    return found
+
+
+def build_design_system(path, out_dir, title, node_modules):
+    raw = flatten(load(path))
+    tokens = resolve(raw)
+    has_dark = any(t["dark"] is not None for t in tokens.values())
+    themes = [{"id": "light", "name": "Light"}] + ([{"id": "dark", "name": "Dark"}] if has_dark else [])
+    colors, others = [], {}
+    order = sorted(tokens, key=lambda p: (0 if is_primitive(p) else 1))
+    for p in order:
+        t = tokens[p]
+        cat = category(p)
+        name = kebab(p)
+        usage = ds_usage(p, t, raw, tokens)
+        if cat == "color":
+            light = ds_color_value(raw[p]["value"], t["value"])
+            value = {"light": light}
+            if t["dark"] is not None:
+                value["dark"] = ds_color_value(raw[p]["dark"], t["dark"])
+            colors.append({"name": name, "value": value if has_dark else light, "usage": usage})
+        elif cat in ("spacing", "radius", "size", "shadow", "motion") and not t["line_height_of"]:
+            fam = {"motion": "duration"}.get(cat, cat)
+            value = css_value(t["value"])
+            if cat == "shadow" and t["dark"] is not None:
+                value = {"light": value, "dark": css_value(t["dark"])}
+            others.setdefault(fam, []).append({"name": name, "value": value, "usage": usage})
+    fams = [(p, t) for p, t in tokens.items() if category(p) == "font" and t["type"] == "fontFamily"]
+    families = {p[-1].lower(): css_value(t["value"]) for p, t in fams}
+    body_key = "body" if "body" in families else (next(iter(families), None))
+    display_key = "display" if "display" in families else body_key
+    weights = [t for p, t in tokens.items() if category(p) == "font" and t["type"] == "fontWeight"]
+    regular = next((int(t["value"]) for t in weights if int(t["value"]) == 400), int(weights[0]["value"]) if weights else 400)
+    strong = max((int(t["value"]) for t in weights), default=700)
+    sizes = [(p, t) for p, t in tokens.items() if category(p) == "font" and t["type"] not in ("fontFamily", "fontWeight")
+             and not t["line_height_of"]]
+    text_styles, display_styles = [], []
+    for p, t in sizes:
+        lh = tokens.get(p[:-1] + (p[-1] + "-line-height",))
+        style = {"name": f"text-{p[-1]}", "fontSize": css_value(t["value"]), "fontWeight": regular}
+        if lh:
+            style["lineHeight"] = lh["value"]
+        text_styles.append(style)
+        n = number(t["value"])
+        if n and n >= 24 and display_key:
+            d = dict(style, name=f"display-{p[-1]}", fontWeight=strong if display_key == body_key else regular)
+            display_styles.append(d)
+    groups = []
+    if display_styles:
+        groups.append({"name": "Display", "family": display_key, "styles": display_styles})
+    if text_styles:
+        groups.append({"name": "Text", "family": body_key, "styles": text_styles})
+    fonts, font_files = [], []
+    if node_modules and os.path.isdir(node_modules):
+        for p, t in fams:
+            first = t["value"][0] if isinstance(t["value"], list) else str(t["value"])
+            for f, weight in find_font_files(first, node_modules):
+                fonts.append({"family": first, "file": "fonts/" + os.path.basename(f), "weight": weight, "style": "normal"})
+                font_files.append(f)
+    doc = {"name": title, "version": 1,
+           "color": {"themes": themes, "tokens": colors},
+           "type": {"fonts": fonts, "families": families, "groups": groups}}
+    for fam, toks in others.items():
+        doc[fam] = {"tokens": toks}
+    doc["meta"] = {"source": "project-kickstart", "file": "design/tokens.json"}
+    os.makedirs(os.path.join(out_dir, "fonts"), exist_ok=True)
+    with open(os.path.join(out_dir, "tokens.json"), "w", encoding="utf-8") as f:
+        json.dump(doc, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    for src in font_files:
+        import shutil
+        shutil.copyfile(src, os.path.join(out_dir, "fonts", os.path.basename(src)))
+    # The first tokens.css, laid out as the type compiles it; the page takes over on the first save.
+    def theme_block(theme):
+        lines = []
+        for c in colors + [s for s in others.get("shadow", [])]:
+            v = c["value"]
+            if isinstance(v, dict):
+                v = v.get(theme, v.get("light"))
+            elif theme != "light":
+                continue
+            v = re.sub(r"^\{(.+)\}$", r"var(--\1)", v) if isinstance(v, str) else v
+            lines.append(f"  --{c['name']}: {v};")
+        return lines
+    css = [f"/* {title} — generated from tokens.json */",
+           ':root, [data-theme="light"] {', *theme_block("light"), "}"]
+    if has_dark:
+        css += ['[data-theme="dark"] {', *theme_block("dark"), "}"]
+    css += [":root {"] + [f"  --{x['name']}: {x['value']};" for fam in others if fam != "shadow" for x in others[fam]] \
+        + [f"  --font-{k}: {v};" for k, v in families.items()] + ["}"]
+    for g in groups:
+        for s in g["styles"]:
+            decl = f"font-family: var(--font-{g['family']}); font-size: {s['fontSize']}; font-weight: {s['fontWeight']};"
+            if "lineHeight" in s:
+                decl += f" line-height: {s['lineHeight']};"
+            css.append(f".{s['name']} {{ {decl} }}")
+    for fo in fonts:
+        css.append(f"@font-face {{ font-family: \"{fo['family']}\"; src: url(\"{fo['file']}\") format(\"woff2\"); "
+                   f"font-weight: {fo['weight']}; font-style: normal; font-display: swap; }}")
+    with open(os.path.join(out_dir, "tokens.css"), "w", encoding="utf-8") as f:
+        f.write("\n".join(css) + "\n")
+    return len(colors), sum(len(v) for v in others.values()), len(fonts)
+
+
+def finish_ds_bundle(dist, namespace, components, out_dir):
+    if not re.match(r"^[A-Za-z_$][A-Za-z0-9_$]*$", namespace):
+        raise TokenError(f"namespace must be a JS identifier, got {namespace!r}")
+    js_path, css_path = os.path.join(dist, "bundle.js"), os.path.join(dist, "bundle.css")
+    if not os.path.exists(js_path):
+        raise TokenError(f"{js_path} not found: build the components first")
+    js = open(js_path, encoding="utf-8").read()
+    if not re.search(rf"(^|[;\s])(var\s+|window\.){re.escape(namespace)}\s*=", js):
+        raise TokenError(f"bundle.js does not assign {namespace}: set the build's library name to it")
+    js = js.replace("<\u002fscript", "<\\u002fscript")
+    for bad in ("</script", "<!--"):
+        if bad in js:
+            js = js.replace(bad, bad.replace("<", "\\x3C"))
+    header = {"format": 4, "namespace": namespace, "components": [{"name": c} for c in components]}
+    js = f"/* @ds-bundle: {json.dumps(header)} */\n" + js
+    css = open(css_path, encoding="utf-8").read() if os.path.exists(css_path) else ""
+    css = re.sub(r"@font-face\s*\{[^}]*\}", "", css)
+    if "</style" in css.lower():
+        raise TokenError("bundle.css contains </style")
+    target = os.path.join(out_dir, "components")
+    os.makedirs(target, exist_ok=True)
+    with open(os.path.join(target, "bundle.js"), "w", encoding="utf-8") as f:
+        f.write(js)
+    if css:
+        with open(os.path.join(target, "bundle.css"), "w", encoding="utf-8") as f:
+            f.write(css)
+    return len(js), len(css)
 
 
 # ---------- CLI ----------
@@ -812,6 +1055,18 @@ def main(argv=None):
     v.add_argument("--css", nargs="*", default=[], help="stylesheets to link, e.g. font CSS, relative to --out")
     v.add_argument("--google-fonts", action="store_true")
     v.add_argument("--fragment", action="store_true")
+    v.add_argument("--design-md")
+    v.add_argument("--components")
+    ds = sub.add_parser("design-system")
+    ds.add_argument("source")
+    ds.add_argument("--out", required=True)
+    ds.add_argument("--title", required=True)
+    ds.add_argument("--node-modules", default="node_modules")
+    db = sub.add_parser("ds-bundle")
+    db.add_argument("--dist", required=True)
+    db.add_argument("--namespace", required=True)
+    db.add_argument("--components", required=True)
+    db.add_argument("--out", required=True)
     k = sub.add_parser("contrast")
     k.add_argument("source", nargs="?")
     k.add_argument("--pairs", nargs="+")
@@ -826,11 +1081,19 @@ def main(argv=None):
             return check(a.paths, a.allow)
         if a.cmd == "preview":
             raw = flatten(load(a.source))
-            page = build_preview(resolve(raw), raw, a.title, a.css, a.google_fonts, a.fragment)
+            page = build_preview(resolve(raw), raw, a.title, a.css, a.google_fonts, a.fragment, a.design_md, a.components)
             os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
             with open(a.out, "w", encoding="utf-8") as f:
                 f.write(page)
             print(f"preview -> {a.out} (open it in a browser)")
+            return 0
+        if a.cmd == "design-system":
+            n_colors, n_other, n_fonts = build_design_system(a.source, a.out, a.title, a.node_modules)
+            print(f"design system -> {a.out}: {n_colors} colors, {n_other} other tokens, {n_fonts} font files")
+            return 0
+        if a.cmd == "ds-bundle":
+            n_js, n_css = finish_ds_bundle(a.dist, a.namespace, [c.strip() for c in a.components.split(",") if c.strip()], a.out)
+            print(f"bundle -> {a.out}/components: bundle.js {n_js // 1024} KB, bundle.css {n_css // 1024} KB")
             return 0
         if a.cmd == "contrast":
             if a.pairs:

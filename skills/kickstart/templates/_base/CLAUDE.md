@@ -44,7 +44,7 @@ Delete this comment block.
 - Before creating a component, check [{{COMPONENTS_DIR}}/README.md]({{COMPONENTS_DIR}}/README.md). If something similar exists, extend it with a variant or prop.
 - No hardcoded colors, sizes, spacing or radii in screens: tokens only. `{{CHECK_COMMAND}}` flags them.
 - Screens compose components. New styles go into a component or the tokens, never into a screen.
-- A new or changed component updates `{{COMPONENTS_DIR}}/README.md` in the same commit.
+- A new or changed component updates `{{COMPONENTS_DIR}}/README.md` in the same commit (and `design/system/entry.ts` when it's new); then `/kickstart-design` refreshes the published design system.
 - For UI work, follow [docs/DESIGN.md](docs/DESIGN.md){{FRONTEND_DESIGN: append " and use the frontend-design skill" ONLY if it is installed}}.
 }}
 
