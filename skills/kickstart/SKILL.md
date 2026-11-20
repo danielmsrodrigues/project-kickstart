@@ -77,7 +77,7 @@ With Superpowers, invoke `superpowers:writing-plans` with the approved spec. Wit
 
 ## Sync mode
 
-A project that already has a design system and a new Claude Design, Figma or tokens export (or "sync the design system"): that's the `tokens-sync` skill (`/tokens-sync`), not this one. Invoke it instead of running steps 1-5.
+A project that already has a design system and a new Claude Design, Figma or tokens export (or "sync the design system"): that's the `kickstart-design` skill (`/kickstart-design`), not this one. Invoke it instead of running steps 1-5.
 
 ## Common mistakes
 
@@ -89,5 +89,5 @@ A project that already has a design system and a new Claude Design, Figma or tok
 | `CLAUDE.md` restating the docs | Keep the rules an agent would get wrong; link the rest. |
 | Leftover `{{PLACEHOLDER}}` or TODO sections | Fill them or delete the section. |
 | A second design system next to an existing one | Document and extend the one that's there. |
-| Applying a design export directly | `/tokens-sync`: diff first, apply on a yes. |
+| Applying a design export directly | `/kickstart-design`: diff first, apply on a yes. |
 | Reading `build_tokens.py` or a template just to copy it | `kickstart_files.py` copies; `--help` explains. |

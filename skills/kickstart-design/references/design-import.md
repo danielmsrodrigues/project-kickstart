@@ -1,6 +1,6 @@
 # Importing a design (origins a and b)
 
-Read this when the design comes from Claude Design or another source: in `/kickstart` step 3b, or in `/tokens-sync`.
+Read this when the design comes from Claude Design or another source: in `/kickstart` step 3b, or in `/kickstart-design`.
 
 ## a) Claude Design export or handoff
 

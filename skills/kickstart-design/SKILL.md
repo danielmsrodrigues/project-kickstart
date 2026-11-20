@@ -1,12 +1,12 @@
 ---
-name: tokens-sync
+name: kickstart-design
 description: Brings a design into a project's design system in code. Use when the user has a new Claude Design export or handoff, Figma variables, a design-tokens file or a reference to apply to an existing project, says "sync the design system", "update the tokens", "import this design", or wants a project's hardcoded colors and CSS variables turned into a token source of truth (design/tokens.json).
 argument-hint: "[path to the export, or what changed]"
 ---
 
-# Tokens Sync
+# Kickstart Design
 
-Invoked as `/tokens-sync` (or `/project-kickstart:tokens-sync`). Text after the command is the export's location or what changed.
+Invoked as `/kickstart-design` (or `/project-kickstart:kickstart-design`). Text after the command is the export's location or what changed.
 
 **Principle:** the design system lives in the repo as code: `design/tokens.json` is the single source, and generated files, components, `docs/DESIGN.md` and the component inventory follow it. Claude Design, Figma and other tools are import sources. Nothing is applied before the user has seen the diff and said yes.
 

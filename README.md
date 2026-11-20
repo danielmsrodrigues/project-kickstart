@@ -17,10 +17,10 @@ It never changes anything without showing you first, and it never writes over yo
 |----------------|---------|
 | Starting a **new project** (an empty folder) | `/kickstart` and a sentence about the project |
 | A project that **already exists** but has no guides for Claude | `/kickstart` |
-| Your designer sent a **new design** (from Claude Design, Figma, or a file of colors and fonts) for a project that already has a design system | `/tokens-sync` and where the file is |
-| An existing project with colors and styles **scattered around the code**, which you want organised in one place | `/tokens-sync` |
+| Your designer sent a **new design** (from Claude Design, Figma, or a file of colors and fonts) for a project that already has a design system | `/kickstart-design` and where the file is |
+| An existing project with colors and styles **scattered around the code**, which you want organised in one place | `/kickstart-design` |
 
-**You don't need `/tokens-sync` for a new project.** `/kickstart` creates the design system by itself whenever the project has screens.
+**You don't need `/kickstart-design` for a new project.** `/kickstart` creates the design system by itself whenever the project has screens.
 
 ## Quick start
 
@@ -93,16 +93,16 @@ One sentence is enough. Add more only if you already know it.
 /kickstart this is our company website, set it up so Claude understands it
 ```
 
-**Bringing in a design later** (`/tokens-sync`)
+**Bringing in a design later** (`/kickstart-design`)
 
 ```
-/tokens-sync ~/Downloads/new-brand-colors.zip
+/kickstart-design ~/Downloads/new-brand-colors.zip
 ```
 ```
-/tokens-sync the designer changed the main color and the fonts in Figma, here's the export: ~/Downloads/figma-variables.json
+/kickstart-design the designer changed the main color and the fonts in Figma, here's the export: ~/Downloads/figma-variables.json
 ```
 ```
-/tokens-sync our colors are scattered around the CSS, put them in one place without changing how the site looks
+/kickstart-design our colors are scattered around the CSS, put them in one place without changing how the site looks
 ```
 
 ## What you get
@@ -134,10 +134,10 @@ A project without screens (a command-line tool, a backend, a library) gets the s
 ## Questions
 
 **Does it create the design system by itself?**
-Yes, in `/kickstart`, for any project with screens. `/tokens-sync` is only for projects that already exist: bringing in a new design later, or organising styles that are scattered around the code.
+Yes, in `/kickstart`, for any project with screens. `/kickstart-design` is only for projects that already exist: bringing in a new design later, or organising styles that are scattered around the code.
 
 **What if my project already has code?**
-`/kickstart` reads it, uses the commands it finds, and writes the guides around what's there. If it finds an existing set of colors and styles, it documents it rather than creating a second one, and offers `/tokens-sync` to organise it without changing how anything looks.
+`/kickstart` reads it, uses the commands it finds, and writes the guides around what's there. If it finds an existing set of colors and styles, it documents it rather than creating a second one, and offers `/kickstart-design` to organise it without changing how anything looks.
 
 **Can the docs be in my language?**
 Yes, just ask (for example "write the docs in Portuguese"). English is the default.
@@ -177,11 +177,11 @@ If Claude Code doesn't find them, add the official marketplace first: `/plugin m
 6. **Git:** `git init` and the initial commit only after a yes.
 7. **Hand off** to Superpowers' `writing-plans` when it's installed.
 
-### `/tokens-sync`
+### `/kickstart-design`
 
 ```
-/tokens-sync ~/Downloads/new-export
-/tokens-sync move our design system into tokens.json
+/kickstart-design ~/Downloads/new-export
+/kickstart-design move our design system into tokens.json
 ```
 
 - **Sync:** diffs a new export against `design/tokens.json`, with the contrast of each change, every usage of changed or removed tokens, and blockers (removed tokens still in use). Applies only what's approved.
@@ -239,8 +239,8 @@ skills/kickstart/
   templates/_design-system/  # tokens, DESIGN.md, component inventory and contract, one file per platform
   scripts/build_tokens.py    # tokens.json → CSS / Tailwind / SwiftUI / TypeScript; diff; check
   scripts/kickstart_files.py # .gitignore, .editorconfig, settings, AGENTS.md and checks, without the model
-skills/tokens-sync/
-  SKILL.md                   # /tokens-sync: sync, adopt or create
+skills/kickstart-design/
+  SKILL.md                   # /kickstart-design: sync, adopt or create
   references/                # importing exports (Claude Design, Figma) and the sync steps
 ```
 

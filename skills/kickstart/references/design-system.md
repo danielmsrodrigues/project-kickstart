@@ -1,6 +1,6 @@
 # Design system step (3b)
 
-Read this when the project has a UI. CLIs, APIs and libraries skip it. For a new export into an existing system, use the `tokens-sync` skill instead.
+Read this when the project has a UI. CLIs, APIs and libraries skip it. For a new export into an existing system, use the `kickstart-design` skill instead.
 
 **Principle:** the design system lives in the repo as code: `design/tokens.json` (single source) → generated native token files → a few base components → `docs/DESIGN.md` and a component inventory. Design tools are import sources only.
 
@@ -14,13 +14,13 @@ Yes for a web frontend, a mobile or desktop app, or a Blazor/Razor UI. A JSON-on
 
 ## Existing design system
 
-Look first: `tokens.*`, CSS full of `--color-*` variables, a Tailwind theme, a Swift `Theme`/`Colors` type, a component-library theme, a `components/ui` folder. If one exists, **document it; don't create a parallel one**. DESIGN.md and the inventory describe the real tokens and components. Add only what's missing (such as the lint rule), with a yes. Moving its tokens into `design/tokens.json` is a separate change: offer `/tokens-sync`, which adopts it without changing how anything looks. Then skip to Docs.
+Look first: `tokens.*`, CSS full of `--color-*` variables, a Tailwind theme, a Swift `Theme`/`Colors` type, a component-library theme, a `components/ui` folder. If one exists, **document it; don't create a parallel one**. DESIGN.md and the inventory describe the real tokens and components. Add only what's missing (such as the lint rule), with a yes. Moving its tokens into `design/tokens.json` is a separate change: offer `/kickstart-design`, which adopts it without changing how anything looks. Then skip to Docs.
 
 ## 1. Origin
 
 One question, three choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation.
 
-- **a) Claude Design export or handoff**, or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../tokens-sync/references/design-import.md`.
+- **a) Claude Design export or handoff**, or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../kickstart-design/references/design-import.md`.
 - **c) None.** Ask two or three questions, one per message, skipping what the design step answered: the tone (three words, and who uses it), references they like and why, what to avoid. Then:
   - if `frontend-design` is available, invoke it and take its direction;
   - otherwise propose one yourself: a one-sentence direction, a 4-6 color palette, one or two type families with a scale, a spacing scale.
