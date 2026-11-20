@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "project-kickstart",
+  "displayName": "Project Kickstart",
+  "version": "0.1.0",
+  "description": "Kickstart new or empty repos: CLAUDE.md and AGENTS.md, architecture and conventions docs, a first ADR, safe starter configs and, for UI projects, a design system in code. Works with Superpowers and frontend-design when installed.",
+  "author": {
+    "name": "Daniel Rodrigues",
+    "url": "https://github.com/danielmsrodrigues"
+  },
+  "homepage": "https://github.com/danielmsrodrigues/project-kickstart",
+  "repository": "https://github.com/danielmsrodrigues/project-kickstart",
+  "license": "MIT",
+  "keywords": [
+    "kickstart",
+    "bootstrap",
+    "scaffold",
+    "claude-md",
+    "agents-md",
+    "adr",
+    "design-system",
+    "design-tokens"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "project-kickstart",
+  "owner": {
+    "name": "Daniel Rodrigues",
+    "url": "https://github.com/danielmsrodrigues"
+  },
+  "description": "Marketplace for the project-kickstart plugin.",
+  "plugins": [
+    {
+      "name": "project-kickstart",
+      "source": "./",
+      "description": "Kickstart new or empty repos with agent guides, docs, safe configs and a design system in code.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": [
+        "kickstart",
+        "scaffold",
+        "claude-md",
+        "design-system"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Rust
+/target/
+**/*.rs.bk
+# Cargo.lock: keep it committed for binaries; for a library crate, decide and record it in an ADR.
