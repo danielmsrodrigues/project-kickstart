@@ -28,7 +28,7 @@ claude plugin install project-kickstart@project-kickstart
 
 ## Use
 
-In a new or empty repo:
+In a new, empty or existing repo:
 
 ```
 /kickstart booking web app for a small climbing gym
@@ -91,7 +91,19 @@ A CLI, API or library gets everything except `design/`, `DESIGN.md` and the comp
 6. **Git:** `git init` and the initial commit, only after you confirm.
 7. **Hand off** to Superpowers' `writing-plans` when it's installed.
 
-**Sync mode.** When you later bring a new Claude Design or Figma export, `/kickstart` shows the token diff and every component that uses a changed or removed token. It applies only what you approve. The design system lives in the repo; design tools are import sources.
+### `/tokens-sync`
+
+For a project that already exists:
+
+```
+/tokens-sync ~/Downloads/new-export     # a new Claude Design, Figma or tokens export
+/tokens-sync move our design system into tokens.json
+```
+
+- **Sync:** shows the token diff, the contrast of each change and every component that uses a changed or removed token, and applies only what you approve.
+- **Adopt:** turns an informal system (CSS variables, a Tailwind theme, a Swift `Theme`) into `design/tokens.json` without changing how anything looks.
+
+The design system lives in the repo; design tools are import sources.
 
 ## Stacks
 
@@ -134,6 +146,9 @@ skills/kickstart/
   templates/_design-system/  # tokens, DESIGN.md, component inventory and contract, one file per platform
   scripts/build_tokens.py    # tokens.json → CSS / Tailwind / SwiftUI / TypeScript; diff; check
   scripts/kickstart_files.py # .gitignore, .editorconfig, settings, AGENTS.md and checks, without the model
+skills/tokens-sync/
+  SKILL.md                   # /tokens-sync: sync, adopt or create a design system
+  references/                # importing exports (Claude Design, Figma) and the sync steps
 ```
 
 To try a local checkout without installing it: `claude --plugin-dir /path/to/project-kickstart`. Before opening a PR, run `claude plugin validate .` and `claude plugin validate skills`.

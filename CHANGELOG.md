@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-11-20
+
+### Added
+
+- `/tokens-sync`, a skill of its own for bringing a design into an existing project:
+  - **Sync:** a new Claude Design, Figma or tokens export goes against `design/tokens.json`. It shows the token diff, the contrast of each change, where each changed or removed token is used, and the blockers (removed tokens still in use), then applies only what's approved.
+  - **Adopt:** an informal design system (CSS variables, a Tailwind theme, a `Theme` type) becomes `design/tokens.json` without changing how anything looks. Framework defaults the code relies on get role tokens with identical values, and the compiled CSS is compared before and after.
+  - **Create:** for a repo with no design system, only the design-system files.
+
+### Changed
+
+- `/kickstart` hands design exports for existing systems to `/tokens-sync`; the sync and import references moved into that skill.
+- Tested on an existing repo with code, a hand-written README in another language, an informal Tailwind theme and git history. `/kickstart` documented the existing system instead of creating a second one, appended to the README and `.gitignore` without touching what was there, and recorded the problems it found as open questions without changing code.
+
 ## [0.3.0] - 2026-11-20
 
 ### Changed

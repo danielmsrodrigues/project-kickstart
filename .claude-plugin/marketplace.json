@@ -9,7 +9,7 @@
     {
       "name": "project-kickstart",
       "source": "./",
-      "description": "Kickstart new or empty repos with agent guides, docs, safe configs and a design system in code.",
+      "description": "Kickstart new or existing repos for AI agents, and sync their design system in code with Claude Design, Figma or token exports.",
       "category": "development",
       "tags": [
         "kickstart",

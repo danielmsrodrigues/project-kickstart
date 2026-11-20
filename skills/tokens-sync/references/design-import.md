@@ -1,6 +1,6 @@
 # Importing a design (origins a and b)
 
-Read this when the design comes from Claude Design or another source, in step 3b or in sync mode.
+Read this when the design comes from Claude Design or another source: in `/kickstart` step 3b, or in `/tokens-sync`.
 
 ## a) Claude Design export or handoff
 
@@ -20,7 +20,7 @@ The docs do not specify the bundle's layout or any token format. So:
 
 ## b) Other sources
 
-- **Tokens file** (W3C DTCG, Style Dictionary, Tokens Studio): map its groups onto the roles in `design-system.md`.
+- **Tokens file** (W3C DTCG, Style Dictionary, Tokens Studio): map its groups onto the roles in `kickstart/references/design-system.md` ("2. Tokens").
 - **Reference site or app.** For a site, read its CSS or computed styles if you have a browser tool. For an app, work from the user's screenshots. Mark the values as derived in DESIGN.md.
 - **Figma variables** as JSON, from REST `GET /v1/files/:key/variables/local` (needs an Enterprise plan) or from a plugin. The shape varies, so read the file first, then:
   - **Groups by role, not by collection name.** Primitives go to `color.palette.*` and the scales; semantic aliases with light/dark modes go to `color.ink/surface/action/edge`. Don't keep `Primitives`/`Semantic` as top-level groups: unknown groups land in `Theme.Other` silently.

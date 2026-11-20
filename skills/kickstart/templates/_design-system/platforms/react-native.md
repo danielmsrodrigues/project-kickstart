@@ -24,7 +24,7 @@ Add it to the linter the project already has, as a **warning**, exempting token 
 // If the project already sets no-restricted-syntax for these files, merge the selectors
 // into that rule: a second entry for the same rule replaces the first.
 const HEX = "#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})";
-const TOKEN_MSG = "Hardcoded value. Use a design token (design/tokens.json).";
+const TOKEN_MSG = "Hardcoded value. Use a design token (design/tokens.json)."; // name the real token source if it is not design/tokens.json
 export const designTokenRules = {
   files: ["src/**/*.{js,jsx,ts,tsx}"],
   ignores: ["src/theme/**"],

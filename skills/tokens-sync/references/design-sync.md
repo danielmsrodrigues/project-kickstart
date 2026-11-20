@@ -1,6 +1,6 @@
 # Sync mode
 
-Use when the project already has `design/tokens.json` and the user brings a new export (Claude Design, Figma, a tokens file) or asks to sync the design system. For reading the export, see `design-import.md`.
+Use when the project already has `design/tokens.json` and the user brings a new export (Claude Design, Figma, a tokens file) or asks to sync the design system. For reading the export, see `design-import.md` in this folder.
 
 1. **Candidate.** Convert the new source into a candidate tokens file in a temporary location, with the same extraction and names as the existing file. Keep a token's name when its role is the same. A rename is a removal plus an addition.
 2. **Diff.** Run `python3 design/build_tokens.py diff design/tokens.json <candidate>`. It prints added (`+`), removed (`-`) and changed (`~`) tokens, plus tokens that change only through an alias, with each token's CSS and code names.
