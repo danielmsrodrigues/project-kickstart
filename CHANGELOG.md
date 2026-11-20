@@ -2,6 +2,31 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] - 2026-11-20
+
+### Added
+
+- **A full design system in Claude Design's format.** When the Artifact tool offers the "Design System" type, `/kickstart` and `/kickstart-design` build one from the project:
+  - a cover from the palette;
+  - a brand book (voice, visual foundations, Avoid) from `DESIGN.md`;
+  - tokens in light and dark, with a usage note on each;
+  - type with the real font files;
+  - every component with a live preview and its guidelines.
+
+  Later runs update the same link. `build_tokens.py design-system` converts the tokens, and `build_tokens.py ds-bundle` finishes the components bundle. A `design/system/` Vite config builds the components as one script.
+- **Crafted depth for the visual direction**, offered as a choice next to the quick one:
+  - research of real references (Dribbble, Behance, Mobbin, modern sites, the product's physical world) into a mood board;
+  - three genuinely different directions drawn on a real screen of the app, to choose or mix;
+  - two or three signature components where the product's character lives;
+  - a visual self-review before anything is shown.
+
+  The references go into `DESIGN.md`.
+- The simple page shows the direction and the Avoid list from `DESIGN.md` (`--design-md`).
+
+### Changed
+
+- The simple page is now the fallback, for hosts without the Design System type.
+
 ## [0.6.1] - 2026-11-20
 
 ### Changed

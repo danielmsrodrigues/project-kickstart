@@ -58,7 +58,7 @@ Flag commands that can't work yet. Then wait for the yes; this can't be skipped 
 
 ### 3b. Design system (projects with a UI)
 
-Read `references/design-system.md` and follow it. It covers asking where the design comes from (Claude Design, another source, or none), documenting an existing system instead of building a parallel one, the tokens, the base components, `DESIGN.md`, the inventory and the lint rule. It ends with its own additions to the list and a yes. A CLI, API or library skips 3b.
+Read `references/design-system.md` and follow it. It covers asking where the design comes from (Claude Design, another source, or none), how deep to go (a quick direction, or crafted: research on Dribbble, Behance, Mobbin and modern sites, three drawn directions and signature components), documenting an existing system instead of building a parallel one, the tokens, the base components, `DESIGN.md`, the inventory and the lint rule. It ends with its own additions to the list and a yes. A CLI, API or library skips 3b.
 
 ### 4. Generate
 

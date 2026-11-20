@@ -21,6 +21,8 @@ Not an output file. The contract every stack's base components meet; write them 
 | Heading | `level` (1-3) | Semantic level and visual size come from the scale; display family if the tokens define one. |
 | Stack | `direction` (vertical, horizontal), `gap` (a spacing token), `align` (cross axis: leading/center/trailing for vertical, top/center/bottom for horizontal) | The only way screens add space between components. |
 
+**Signature components** (crafted depth): two or three product-specific pieces, such as an order ticket or a time-slot picker, follow the same rules and get the same inventory row, README and preview as the six.
+
 Names follow the stack's convention (`Button.tsx`, `Button.razor`). Where any of the six would clash with a system type (SwiftUI `Button`, `Text`), prefix all six the same way (`DSButton`, `DSText`, `DSCard`, ...) so the set reads as one. Spacing and padding props take a spacing token, not a free number, where the language allows it (an enum of the spacing steps in Swift, a union type in TypeScript).
 
 If the project already has components covering one of these, document that component in the inventory instead of writing a new one.

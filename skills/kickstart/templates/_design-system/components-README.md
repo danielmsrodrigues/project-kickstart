@@ -23,4 +23,4 @@ Styles come only from tokens ([design/tokens.json]({{RELATIVE PATH}})); see [doc
 
 1. Search this table and the components folder for something close. Prefer a new variant.
 2. Build it from tokens and existing components only.
-3. Add its row here, in the same commit.
+3. Add its row here in the same commit (and its export to `design/system/entry.ts` if that file exists). Run `/kickstart-design` to refresh the published design system.
