@@ -4,9 +4,15 @@ Read this in step 3b when the user chose the crafted depth. It replaces the sing
 
 ## 1. Research (a mood board, not a copy)
 
-**What to search.** Build three to five queries from the product, its audience and the user's tone words. Mix the product's own world with interface examples:
-- for the product's world: "barbershop booking app", "bakery order website";
-- for the tone: "warm handmade branding", "vintage signage typography".
+**What to search: three layers, not just the niche.** Searching only the product's niche ("barbershop app") returns that niche's clichés, the very thing to avoid. Build queries in three layers:
+
+| Layer | Searches for | Example (a barbershop booking app) | Gives |
+|-------|--------------|------------------------------------|-------|
+| The job, any industry | the flow and the key screen, by what it does | "booking app", "appointment scheduling", "time slot picker", "service selection" | patterns that work: Mobbin, Dribbble |
+| The tone, neighboring worlds | brands and places with the same personality, in other trades | "heritage brand identity", "Lisbon signage", "old café branding", "hand-painted lettering" | colors, type, texture |
+| The niche, to check only | what the niche already does | "barbershop website" | what to avoid, and where to stand out; never the main source |
+
+Most references come from the first two layers.
 
 **Where.** Spread the queries across these sources, using what each is good for:
 
@@ -25,7 +31,9 @@ Read this in step 3b when the user chose the crafted depth. It replaces the sing
 
 **Keep 6 to 8 references.** For each one, record the link, what it is, and the one thing to take from it, phrased as a principle: "a single saturated accent on a neutral ground", "condensed display numerals for times", "cards cut like paper tickets". Never take a whole layout, an illustration, a logo or a distinctive mark. Drop references that only show trends unrelated to this product.
 
-Show the mood board to the user as a short list (link, and what you'd take from it), then go to the directions without waiting, unless they want to react.
+**Get the user's reaction before drawing anything.** Show the mood board as images where you can, or else as links, each with what you'd take from it. Then ask, with the question tool when you have one, which references they like and which they don't (multi-select). Taste is visual, and words alone don't capture it. The directions build on what they picked and leave out what they rejected.
+
+**Don't start the directions before the research and this reaction are in.** A direction drafted while the research runs comes from the model's defaults, not from the references.
 
 ## 2. Three directions, drawn
 
@@ -43,7 +51,12 @@ Each direction must pass the generic-defaults check in `design-system.md` and th
 - **Publishing:** if you can publish HTML (Artifact tool), publish it privately and give the link. Otherwise give the file path.
 - **Visual self-review:** with a browser tool, open it and take one screenshot. Check it against the generic defaults and your own direction sentences. Fix what reads as template, once, before showing it.
 
-Then ask, with buttons when the question tool exists: which direction (A, B or C), or a mix ("B's colors with A's type"). The chosen direction becomes the token values in step 2 of `design-system.md`. Record the references in `docs/DESIGN.md` under "References", with link and what was taken.
+Then ask, with buttons when the question tool exists: which direction (A, B or C), or a mix ("B's colors with A's type"). The chosen direction becomes the token values in step 2 of `design-system.md`.
+
+Then save the result in the repo, as part of the confirmed file list:
+- the chosen direction's drawing at `docs/design/direction.html`: the visual reference for building the real screens, which keeps the look from being lost between this step and the implementation;
+- the references in `docs/DESIGN.md` under "References", each with its link and what was taken from it;
+- a line in `docs/DESIGN.md` pointing at `docs/design/direction.html`.
 
 ## 3. Signature components
 

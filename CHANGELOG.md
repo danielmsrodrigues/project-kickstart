@@ -15,12 +15,13 @@ All notable changes to this project are documented here. The format follows [Kee
 
   Later runs update the same link. `build_tokens.py design-system` converts the tokens, and `build_tokens.py ds-bundle` finishes the components bundle. A `design/system/` Vite config builds the components as one script.
 - **Crafted depth for the visual direction**, offered as a choice next to the quick one:
-  - research of real references (Dribbble, Behance, Mobbin, modern sites, the product's physical world) into a mood board;
+  - research of real references (Dribbble, Behance, Mobbin, modern sites, the product's physical world) into a mood board. The research looks at three layers: the job in any industry (booking apps in general), the tone in neighboring worlds, and the niche only as a check, so the niche's clichés don't take over;
+  - the user reacts to the mood board (likes and dislikes) before anything is drawn, and no direction is drafted before then;
   - three genuinely different directions drawn on a real screen of the app, to choose or mix;
   - two or three signature components where the product's character lives;
   - a visual self-review before anything is shown.
 
-  The references go into `DESIGN.md`.
+  The chosen direction's drawing is saved as `docs/design/direction.html`, the visual reference for building the screens. The references go into `DESIGN.md`.
 - The simple page shows the direction and the Avoid list from `DESIGN.md` (`--design-md`).
 
 ### Changed

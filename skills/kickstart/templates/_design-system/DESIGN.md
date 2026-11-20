@@ -16,7 +16,7 @@ Preview: {{PUBLISHED LINK, or `design/preview.html` (rebuild with the `preview` 
 
 ## References
 
-{{CRAFTED DEPTH ONLY: the 6-8 references from the research, each "[name](link): what was taken from it" (a principle, never a copied layout). Delete this section for the quick depth.}}
+{{CRAFTED DEPTH ONLY: the chosen direction's drawing, [docs/design/direction.html](design/direction.html), as the visual reference for screens; then the 6-8 references from the research, each "[name](link): what was taken from it" (a principle, never a copied layout). Delete this section for the quick depth.}}
 
 ## Tokens
 
