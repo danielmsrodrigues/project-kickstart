@@ -16,6 +16,12 @@ Defaults only. `Package.swift` or the Xcode project and its schemes win.
 
 Find schemes with `xcodebuild -list`. Pick the destination from the project's CI or ask once.
 
+## Scaffold (empty repo)
+
+- Package (library, CLI, or shared code for an app): `swift package init --type <library|executable> --name <Name>`. It works in a non-empty directory, does not run git, and creates `Tests/` too.
+- iOS or macOS app: there is no command-line scaffolder for an Xcode app project. Ask the user to create it in Xcode first (File > New > Project), or start with a package for the app's shared code and add the app target later.
+
+
 ## Conventions
 
 - Types in UpperCamelCase, everything else in lowerCamelCase; one primary type per file, file named after it.

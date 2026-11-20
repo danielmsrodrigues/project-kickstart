@@ -20,7 +20,7 @@ If the user said to proceed without them, ask nothing here: make stated calls, r
 | 4 | Decisions already made and hard constraints (hosting, data store, must-use, must-not-use) | `docs/decisions/0001-*.md`, Don'ts |
 | 5 | Conventions that differ from the stack's defaults (package manager, test framework, branch flow) | `docs/CONVENTIONS.md`, commands, allow-list |
 
-Phrase each question for this project, and say in a few words what the answer changes. When the choices can be named, offer two or three with your pick.
+Phrase each question for this project, and say in a few words what the answer changes. When the choices can be named, offer two or three with your pick first, as buttons through the structured question tool when you have one (`AskUserQuestion` in Claude Code). Topic 1 (what it is) stays an open question in plain text.
 
 Example, for "new project: an API for our booking app" in an empty repo:
 

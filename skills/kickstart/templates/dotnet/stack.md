@@ -16,6 +16,11 @@ Defaults only. The solution file, test projects and `global.json` win.
 
 Pass the solution file when there is more than one project at the root.
 
+## Scaffold (empty repo)
+
+`dotnet new <template> -n <Name> -o src/<Name>` (templates: `blazor`, `blazorwasm`, `webapi`, `console`, `classlib`; `dotnet new list` shows all), then `dotnet new sln -n <Name>` and `dotnet sln add src/<Name>`. Tests: `dotnet new xunit -n <Name>.Tests -o tests/<Name>.Tests` and `dotnet sln add` it. `dotnet new` works in a non-empty directory and does not run git.
+
+
 ## Conventions
 
 - `src/` for projects, `tests/` for test projects named `<Project>.Tests`.

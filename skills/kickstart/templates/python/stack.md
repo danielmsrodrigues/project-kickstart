@@ -16,6 +16,11 @@ Defaults only. Tools named in `pyproject.toml` and the lockfile win.
 
 Poetry: `poetry install`, `poetry run pytest`, and so on.
 
+## Scaffold (empty repo)
+
+`uv init --app --vcs none --name <name> --no-workspace` (use `--lib` or `--package` for a library or an installable CLI). It works in a non-empty directory. Without `--vcs none` it runs `git init`. Then `uv add --dev pytest ruff` for the test runner and linter.
+
+
 ## Conventions
 
 - `src/<package>/` layout, tests in `tests/` mirroring the package.

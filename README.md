@@ -7,7 +7,7 @@ A Claude Code plugin that sets up a new or empty repo with what AI coding agents
 - **Configs:** `.gitignore`, `.editorconfig`, `README.md`, and `.claude/settings.json` with a safe allow-list for the stack's build, test and lint commands
 - **A design system in code, for projects with a UI:** `design/tokens.json` as the single source, generated native tokens, six base components, `docs/DESIGN.md`, a component inventory, and a lint warning for hardcoded values
 
-It designs before it writes. Nothing is written until you confirm the file list. It never overwrites an existing file; it shows a diff and asks instead. It commits only when you say so.
+It designs before it writes, and starts an empty repo with the stack's official scaffolder (create-vite, `dotnet new`, `uv init`, ...), so every command in `CLAUDE.md` has actually run. Nothing is written or installed until you confirm the list. It never overwrites an existing file; it shows a diff and asks instead. It commits only when you say so.
 
 ## Install
 
@@ -38,7 +38,7 @@ In a new or empty repo:
 
 ## Example output
 
-A React + TypeScript + Tailwind web app, started from an empty folder:
+A React + TypeScript + Tailwind web app, started from an empty folder (create-vite's own files, like `vite.config.ts`, `tsconfig*.json` and `src/main.tsx`, are left out for brevity):
 
 ```
 climbing-gym-booking/
@@ -58,7 +58,8 @@ climbing-gym-booking/
 │   ├── DESIGN.md                     # direction, token roles, layout, motion, "Avoid"
 │   └── decisions/
 │       └── 0001-use-react-and-vite-for-the-booking-app.md
-├── eslint.config.js                  # + warning rule for hardcoded colors and arbitrary values
+├── package.json                      # scaffolded; + test (vitest) and tokens scripts
+├── eslint.config.js                  # scaffolded; + warning rule for hardcoded colors and arbitrary values
 └── src/
     ├── index.css                     # imports tailwindcss, then the tokens
     ├── styles/
@@ -79,14 +80,14 @@ A CLI, API or library gets everything except `design/`, `DESIGN.md` and the comp
 
 1. **Design.** With Superpowers installed, the design runs through its `brainstorming` skill. Without it, the plugin asks up to five questions of its own, one at a time, and only ones the repo doesn't already answer.
 2. **Detect the stack** from the files present (`package.json`, `*.csproj`, `Package.swift`, `pyproject.toml`, `go.mod`, `Cargo.toml`, ...) and read the real commands from them.
-3. **Propose the file list** and wait for your yes. Existing files are marked and will get a diff.
+3. **Propose the list** and wait for your yes. In an empty repo, it starts with the scaffold and install commands. Existing files are marked and will get a diff. Choices come as buttons, with the recommendation first.
 4. **Design system (UI projects only).** The plugin asks where the design comes from:
    - a Claude Design export or handoff;
    - another source: a tokens file, Figma variables, or a reference site;
    - nothing yet, in which case it asks two or three questions about tone, references and what to avoid.
 
    It then settles the tokens, base components and docs. If the repo already has a design system, it documents that one instead of creating a second.
-5. **Generate** the files and run the checks: CLAUDE.md length, no placeholders left, links resolve, valid JSON, token build, hardcoded-value check.
+5. **Scaffold and generate.** It runs the scaffolder (in a temporary folder if yours isn't empty, with git turned off) and installs dependencies. Then it writes the files, wires in the design system and runs the checks: build, test and lint, CLAUDE.md length, no placeholders left, links resolve, valid JSON, token build, hardcoded-value check.
 6. **Git:** `git init` and the initial commit, only after you confirm.
 7. **Hand off** to Superpowers' `writing-plans` when it's installed.
 

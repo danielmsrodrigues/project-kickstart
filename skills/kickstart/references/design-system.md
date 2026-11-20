@@ -40,7 +40,7 @@ Then skip to 4.
 
 ## 1. Origin
 
-Ask once, as one question with these three choices. If the user said to go ahead without them, still ask unless a source is already in the repo or the conversation: this answer decides every value.
+Ask once, as one question with these three choices (as buttons when the question tool is available). If the user said to go ahead without them, still ask unless a source is already in the repo or the conversation: this answer decides every value.
 
 **a) Claude Design export or handoff.** What the official docs state (Claude Design help center and launch post):
 - The Export menu offers a `.zip` download, PDF, PPTX, Google Slides, standalone HTML, and sends to other tools.
@@ -106,7 +106,7 @@ Settle the values for `design/tokens.json` (W3C DTCG), following the structure o
 - **Shadows** use the DTCG object (`color`, `offsetX`, `offsetY`, `blur`, `spread`).
 
 In step 4: write `design/tokens.json`, copy `scripts/build_tokens.py` to `design/build_tokens.py` (standard-library Python 3.8+), and run the platform's build command from `platforms.md`. Then:
-- Wire the output in as the platform's row says (CSS entry, host page, `Package.swift`).
+- Wire the output in as the platform's row says (CSS entry, host page, `Package.swift`). After a scaffold, the files exist: do it now, and replace the scaffold's demo styles, which are full of literal colors.
 - Load the fonts as the platform's row says.
 - Add a `tokens` script/target if the project has a task runner (`package.json` scripts, Makefile, justfile); otherwise the command lives in `CLAUDE.md`.
 - Add the build and check commands to `CLAUDE.md` Commands.

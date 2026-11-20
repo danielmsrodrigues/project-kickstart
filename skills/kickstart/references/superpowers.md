@@ -20,6 +20,8 @@ On harnesses that list skills without a plugin prefix, the same skills appear as
 3. Brainstorming saves the spec and commits it. If the directory is not a git repo yet, save the spec and leave it uncommitted: it goes into the initial commit in step 5. Do not run `git init` here.
 4. Brainstorming ends by invoking `superpowers:writing-plans`. **Defer that one invocation**: once the spec is approved, come back to this skill, run steps 2 to 5, and invoke `superpowers:writing-plans` in step 6. Tell the user in one line that the project guides get generated before the plan.
 
+**Question style:** brainstorming asks its first questions, about purpose and the why, as open text on purpose; keep them that way. When it reaches a question whose choices can be named (an approach, a technical option, approving the design), ask it with the structured question tool if you have one (`AskUserQuestion` in Claude Code), recommendation first.
+
 If the user opted out of brainstorming's questions, respect that: take what the request and repo give you, and state the remaining calls as your own in the step 3 message.
 
 ## What the spec feeds

@@ -14,13 +14,14 @@ Give a new or empty repo the files an AI agent and a human need on day one: a sh
 
 **Core principle:** design first, then generate only what the design and the repo justify. A guide full of guesses is worse than no guide.
 
-This skill does not scaffold product code beyond the base UI components, and does not plan implementation. With Superpowers installed, design and planning are delegated to it.
+Beyond the stack's official scaffold (on confirmation) and the base UI components, this skill writes no product code, and it does not plan implementation. With Superpowers installed, design and planning are delegated to it.
 
 ## Rules
 
 - **Never overwrite an existing file.** Show a diff of what you would change and ask.
 - **Nothing is written before the file list is confirmed** (step 3). No `git init` or commit before its own confirmation (step 5).
 - **Ask a question only when its answer changes a generated file** and neither the request nor the repo answers it. One question per message.
+- **Offer answers as buttons.** When a question has choices you can name (stack, template, design origin, the file-list confirmation, git), ask it with the structured question tool if you have one (`AskUserQuestion` in Claude Code): two to four options, your recommendation first and marked, a one-line trade-off on each. The tool keeps a free-text answer available. Open questions about purpose or intent stay as plain text.
 - **Generated docs use the language the user asked for; otherwise English.** File names stay in English.
 - **Real beats default:** commands, paths and names found in the repo win over template defaults. A `stack.md` default goes in only when the repo defines nothing for that purpose, and the step 3 message marks it unverified. Never write a command from anywhere else.
 - **Unknown is a valid answer.** What neither the user nor the repo settles goes under "Open questions" in `docs/ARCHITECTURE.md` or is left out, never guessed.
@@ -40,7 +41,9 @@ Either way you leave this step with: purpose, stack, main components, decisions 
 
 ### 2. Detect the stack
 
-Read [references/stacks.md](references/stacks.md). Detect from the files present (`package.json`, `*.csproj`, `Package.swift`, `pyproject.toml`, `go.mod`, `Cargo.toml`, ...) and read the real commands from them. If the repo has no stack marker and the design did not settle it, ask.
+Read [references/stacks.md](references/stacks.md). Detect from the files present (`package.json`, `*.csproj`, `Package.swift`, `pyproject.toml`, `go.mod`, `Cargo.toml`, ...) and read the real commands from them. If the repo has no stack marker and the design did not settle it, ask, with your recommendation first.
+
+**Empty repo:** once the stack is settled, read [references/scaffolding.md](references/scaffolding.md). Unless the user declines, the stack's official scaffolder runs before anything is generated, so the commands are real and the design system can be wired in at once.
 
 No template for the stack: use `templates/_base/` and adapt it to what you detected.
 
@@ -49,6 +52,8 @@ No template for the stack: use `templates/_base/` and adapt it to what you detec
 Show every file with its action, then wait for a yes:
 
 ```
+run      npx --yes create-vite@latest <tmp> --template react-ts --eslint --no-interactive --no-immediate
+run      npm install
 create   CLAUDE.md
 symlink  AGENTS.md -> CLAUDE.md
 create   docs/ARCHITECTURE.md
@@ -60,7 +65,7 @@ exists   .gitignore   (will show a diff and ask)
 exists   README.md    (will show a diff and ask)
 ```
 
-In the same message, flag commands that exist but cannot work yet (for example a `build` script with no `tsconfig.json`). The user may drop or add entries. Generate exactly the confirmed list.
+`run` lines (scaffold, installs) come first; they download packages, so they need the same yes. In the same message, flag commands that exist but cannot work yet (for example a `build` script with no `tsconfig.json`). The user may drop or add entries. Generate exactly the confirmed list. Ask for the yes with buttons ("Generate", "Change the list") when the question tool is available.
 
 If the user said to go ahead without them ("just do it", "I'm stepping away"), still stop here: send the design summary and this list in one message and wait. This confirmation cannot be skipped, and neither can the design-system origin question in 3b when no design source is in the repo or the conversation.
 
@@ -74,7 +79,7 @@ Step 3b decides (questions, token values, file list) and gets a yes; step 4 writ
 
 ### 4. Generate
 
-Read [references/generating-files.md](references/generating-files.md) before writing anything. It covers template resolution (`templates/_base/` plus `templates/<stack>/` overrides), per-file rules, the existing-file protocol, the `AGENTS.md` symlink-or-copy rule, and the checks to run afterwards.
+If the list has `run` lines, run them first, as [references/scaffolding.md](references/scaffolding.md) describes. Then read [references/generating-files.md](references/generating-files.md) before writing anything. It covers template resolution (`templates/_base/` plus `templates/<stack>/` overrides), per-file rules, the existing-file protocol, the `AGENTS.md` symlink-or-copy rule, and the checks to run afterwards.
 
 Files, when confirmed in step 3:
 
@@ -89,7 +94,7 @@ Files, when confirmed in step 3:
 | `.claude/settings.json` | Allow-list for the stack's build/test/lint commands only. Nothing destructive. |
 | UI only: `design/`, token outputs, base components, `docs/DESIGN.md`, inventory | As set in step 3b. |
 
-Run the checks in the reference and fix what fails before moving on.
+Run the checks in the reference and fix what fails before moving on. When dependencies are installed, that includes running the build, test and lint commands.
 
 ### 5. Git
 
@@ -109,6 +114,8 @@ When a project already has `design/tokens.json` and the user brings a new Claude
 | Mistake | Fix |
 |---------|-----|
 | Writing files right after the design, skipping the list | Step 3 always runs, even for an empty repo. |
+| Leaving an empty repo empty, so every command is "unverified" | Offer the stack's scaffolder in the list. |
+| A scaffolder running `git init`, or refusing a folder that already has the spec | Use the flags in `stack.md`; scaffold into a temp directory and move it in. |
 | Replacing a hand-written `README.md` or `.gitignore` | Existing file: diff and ask. Appending is still a change. |
 | `CLAUDE.md` that restates the conventions doc | Keep the few rules an agent would get wrong; link the rest. |
 | Template defaults for commands the repo defines differently | Read `package.json` scripts, `Makefile`, CI files first. |

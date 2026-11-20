@@ -79,4 +79,4 @@ Run these and fix failures before reporting:
 3. Every relative link in `CLAUDE.md` and `README.md` points to a file that exists. A link to a file the user dropped from the list is removed, not left dangling.
 4. `.claude/settings.json` is valid JSON (`python3 -m json.tool .claude/settings.json` or `node -e "JSON.parse(require('fs').readFileSync('.claude/settings.json','utf8'))"`).
 5. `AGENTS.md` resolves to the same content as `CLAUDE.md` (`diff CLAUDE.md AGENTS.md`, ignoring the Windows copy header).
-6. If a build or test command is cheap and the dependencies are already installed, run it once to confirm it exists. Do not install dependencies to do this.
+6. If dependencies are installed (the scaffold step installed them, or they already were), run the build, test and lint commands once and report each result. Do not install dependencies only to run checks.

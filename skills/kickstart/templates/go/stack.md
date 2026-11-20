@@ -14,6 +14,11 @@ Defaults only. `Makefile`/`justfile` targets and CI win.
 | Format check | `gofmt -l .` |
 | Run | `go run ./cmd/<name>` |
 
+## Scaffold (empty repo)
+
+`go mod init <module path>` (e.g. `github.com/<owner>/<repo>`; ask for it if unknown), then `cmd/<name>/main.go` by hand. It does not run git. (Not exercised by this skill's tests: Go was unavailable on the test machine.)
+
+
 ## Conventions
 
 - `cmd/<name>/` for binaries, `internal/` for code not meant for import, `pkg/` only for real public libraries.

@@ -10,7 +10,6 @@
       "name": "project-kickstart",
       "source": "./",
       "description": "Kickstart new or empty repos with agent guides, docs, safe configs and a design system in code.",
-      "version": "0.1.0",
       "category": "development",
       "tags": [
         "kickstart",

@@ -85,12 +85,13 @@ If the project uses a component library (MUI, Chakra, shadcn/ui, Vuetify, MudBla
 
 ## Enforcement (lint)
 
-Use the linter the project already has, add the rule as a **warning**, and exempt token and generated files. If the project has no linter for these files, put the `check` command in the lint step (no dependencies) instead of installing one.
+Use the linter the project already has, add the rule as a **warning**, and exempt token and generated files. With create-vite's default Oxlint (React templates without `--eslint`), use the `check` command in the lint step instead: the ESLint selectors below don't apply. If the project has no linter for these files, put the `check` command in the lint step (no dependencies) instead of installing one.
 
 **ESLint (flat config): JS/TS/JSX, inline styles, React Native style objects, Tailwind arbitrary values**
 
 ```js
-// eslint.config.js: add this object to the exported array.
+// eslint.config.js: add this object to the exported array (inside defineConfig([...]) in
+// create-vite and create-next-app configs). Tested with ESLint 9 and 10.
 // If the project already sets no-restricted-syntax for these files, merge the selectors
 // into that rule: a second entry for the same rule replaces the first.
 const HEX = "#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})";

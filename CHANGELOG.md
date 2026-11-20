@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-20
+
+### Added
+
+- Scaffolding for empty repos: once the stack is settled, the skill offers the stack's official scaffolder (create-vite, create-next-app, `uv init`, `dotnet new`, `swift package init`, `cargo init`, `go mod init`) and the dependency install as `run` lines in the confirmed list. The generated `CLAUDE.md` then lists commands that were actually run, and the design system is wired in at once: CSS entry, Tailwind plugin, `tokens` script, lint rule.
+- Questions with nameable choices (stack, template, design origin, file-list confirmation, git) are asked as buttons through the structured question tool (`AskUserQuestion` in Claude Code), with the recommendation first. Open questions about purpose stay as text.
+- Checks after generating run the build, test and lint commands when dependencies are installed.
+
+### Changed
+
+- Scaffolders run with flags that keep them from running `git init` (`--vcs none`, `--disable-git`). When the folder isn't empty, they run in a temporary directory and the result is moved in without replacing existing files.
+- The marketplace entry no longer repeats the version; `plugin.json` is the single source.
+- `.claude/settings.json` is a protected file: if writing it is blocked, the skill shows its content and asks for approval.
+
 ## [0.1.0] - 2026-11-20
 
 ### Added

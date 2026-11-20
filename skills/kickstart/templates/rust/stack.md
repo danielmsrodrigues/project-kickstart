@@ -14,6 +14,11 @@ Defaults only. Workspace layout, `Makefile`/`justfile` and CI win.
 | Format check | `cargo fmt --check` |
 | Run | `cargo run` (workspace: `cargo run -p <crate>`) |
 
+## Scaffold (empty repo)
+
+`cargo init --vcs none --name <name>` (add `--lib` for a library). It works in a non-empty directory. Without `--vcs none` it runs `git init`. `--vcs none` also skips `.gitignore`, which this skill generates anyway.
+
+
 ## Conventions
 
 - `rustfmt` and `clippy` are the style; fix warnings rather than allowing them, and justify any `#[allow(...)]`.

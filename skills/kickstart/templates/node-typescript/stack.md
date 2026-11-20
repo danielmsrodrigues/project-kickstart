@@ -15,6 +15,19 @@ Defaults only. Commands found in `package.json` scripts and the lockfile win.
 | Type-check | `npm run typecheck` (script running `tsc --noEmit`) |
 | Run | `npm run dev` or `npm start` |
 
+## Scaffold (empty repo)
+
+Both scaffolders refuse a non-empty directory: run them in a temporary directory and move the result in (see `references/scaffolding.md`). Neither installs or runs git with these flags.
+
+| Building | Command (`<tmp>` = temporary directory) |
+|----------|-----------------------------------------|
+| Single-page app (React, Vue, Svelte, Solid, Preact, Lit, vanilla) | `npx --yes create-vite@latest <tmp> --template <react-ts\|vue-ts\|svelte-ts\|solid-ts\|preact-ts\|lit-ts\|vanilla-ts> --no-interactive --no-immediate`; add `--eslint` for React, otherwise create-vite sets up Oxlint |
+| Full-stack React app (server rendering, API routes) | `npx --yes create-next-app@latest <tmp> --ts --tailwind --eslint --app --src-dir --use-npm --skip-install --disable-git --yes` |
+| CLI or library | No scaffolder: write `package.json` (`"type": "module"`, `build`/`test`/`lint` scripts) and `tsconfig.json` by hand, and list them as `create` lines |
+
+Then `npm install`. create-vite has no test runner: add `npm install -D vitest` and a `"test": "vitest run"` script. Tailwind v4 with Vite: `npm install -D tailwindcss @tailwindcss/vite`, add `tailwindcss()` to `plugins` in `vite.config.ts`, and make the CSS entry start with `@import "tailwindcss";`. The scaffold's demo styles (`src/index.css`, `src/App.css`) are full of literal colors: replace them when the design system is wired in.
+
+
 ## Conventions
 
 - `"strict": true` in `tsconfig.json`; no `any` without a comment saying why.
