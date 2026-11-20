@@ -1,5 +1,12 @@
 # Contributing
 
+Thanks for helping! There are two ways in, and neither needs permission.
+
+- **Report or suggest:** [open an issue](https://github.com/danielmsrodrigues/project-kickstart/issues/new/choose). There are short forms for something that went wrong, an idea, and a new technology. You don't need to be technical.
+- **Change something:** fork the repo, make the change on a branch, and open a pull request. The template has a short checklist. Every pull request is reviewed before it's merged, and releases are published from `main` only.
+
+To try your changes, run Claude Code with your checkout: `claude --plugin-dir /path/to/your/fork`. Then use `/kickstart` or `/kickstart-design` in a scratch folder.
+
 ## Adding a stack
 
 A stack is a folder under `skills/kickstart/templates/<stack>/`. It holds only what differs from `_base/`.

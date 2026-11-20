@@ -1,0 +1,47 @@
+name: Something went wrong
+description: /kickstart or /kickstart-design did something unexpected, wrong, or broke a project.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting! You don't need to be technical; describe it the way you'd tell a colleague.
+  - type: dropdown
+    id: command
+    attributes:
+      label: Which command?
+      options:
+        - /kickstart
+        - /kickstart-design
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: What did you type?
+      description: The command and the sentence after it, plus any answers that seem relevant.
+      placeholder: /kickstart booking app for a barbershop
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: project
+    attributes:
+      label: About the project
+      description: Was the folder empty or an existing project? Which technology, if you know (React, .NET, SwiftUI...)?
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: Run `claude plugin list` and copy the project-kickstart version.
+      placeholder: 0.5.0
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Screenshots, error messages, the generated file that looks wrong. Remove anything private first.

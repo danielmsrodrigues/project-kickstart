@@ -152,6 +152,10 @@ claude plugin update project-kickstart@project-kickstart
 **I typed `/kick` and the menu shows `project-kickstart:kickstart`. Is that right?**
 Yes. That's the full name; typing `/kickstart` on its own works the same.
 
+## Feedback and ideas
+
+Something went wrong, or you have an idea? [Open an issue](https://github.com/danielmsrodrigues/project-kickstart/issues/new/choose): there's a short form for each case, written for non-developers too. Want to change something yourself? See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Works best with
 
 Both are optional. Install them and project-kickstart uses them automatically.

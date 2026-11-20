@@ -1,0 +1,18 @@
+name: Idea or improvement
+description: Something you'd like it to do, do better, or explain more clearly.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      placeholder: When the project has a backend, I'd like it to also set up...
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter to you?
+      description: The situation where you needed it. This helps more than a proposed solution.
+    validations:
+      required: true

@@ -1,0 +1,25 @@
+name: Support a new technology
+description: Ask for (or offer) a template for a language, framework or UI platform that isn't covered yet.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: Covered today are Node + TypeScript, Python, .NET, Swift, Go and Rust, and for design systems web, SwiftUI, Blazor and React Native. CONTRIBUTING.md explains how a new one is added.
+  - type: input
+    id: tech
+    attributes:
+      label: Technology
+      placeholder: Java + Spring Boot, Flutter, Laravel...
+    validations:
+      required: true
+  - type: textarea
+    id: commands
+    attributes:
+      label: How a new project is usually created and run
+      description: If you know them, the official scaffold command and the build, test and lint commands.
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Can you help?
+      options:
+        - label: I'd like to open a pull request for this myself
