@@ -89,11 +89,12 @@ def flatten(tree, path=(), inherited_type=None, out=None):
             ext = node.get("$extensions", {})
             out[p] = {"value": node["$value"], "type": node.get("$type", group_type),
                       "dark": ext.get("modes", {}).get("dark"), "line_height_of": None,
-                      "text_on": ext.get("textOn"), "decorative": bool(ext.get("decorative"))}
+                      "text_on": ext.get("textOn"), "decorative": bool(ext.get("decorative")),
+                      "description": node.get("$description")}
             if "lineHeight" in ext:
                 out[p[:-1] + (key + "-line-height",)] = {"value": ext["lineHeight"], "type": "number",
                                                          "dark": None, "line_height_of": p, "text_on": None,
-                                                         "decorative": False}
+                                                         "decorative": False, "description": None}
         else:
             flatten(node, p, group_type, out)
     return out
@@ -661,15 +662,78 @@ def build_preview(tokens, raw, title, css_links, google_fonts=False, fragment=Fa
             type_rows += (f'<div class="pv-row"><div style="font-family:{body};font-size:22px;font-weight:{var(p)}">Weight {esc(t["value"])}</div>'
                           f'<div><b>{esc(".".join(p[1:]))}</b><br>{code(p)}</div></div>')
 
-    def bars(cat, style):
-        return "".join(f'<div class="pv-row"><div class="pv-measure">{style(p)}</div><div><b>{esc(".".join(p[1:]))}</b> <small>{esc(css_value(t["value"]))}</small><br>{code(p)}</div></div>'
-                       for p, t in groups.get(cat, []))
+    first = lambda grp: next((p for p, _ in colors if len(p) > 2 and p[1] == grp), None)
+    accent = var(first("action")) if first("action") else "currentColor"
+    edge = var(first("edge")) if first("edge") else "currentColor"
+    focus = next((var(p) for p, _ in colors if "focus" in p[-1]), accent)
     surface = var(base) if base else "#fff"
-    spacing = bars("spacing", lambda p: f'<div style="width:{var(p)};height:16px;background:currentColor;opacity:.5"></div>')
-    sizes = bars("size", lambda p: f'<div style="width:min({var(p)},100%);height:12px;background:currentColor;opacity:.35"></div>')
-    radii = bars("radius", lambda p: f'<div style="width:72px;height:48px;border:2px solid currentColor;border-radius:{var(p)}"></div>')
-    shadows = bars("shadow", lambda p: f'<div style="width:96px;height:56px;background:{surface};box-shadow:{var(p)};border-radius:8px"></div>')
-    motion = bars("motion", lambda p: f'<div class="pv-move" style="transition-duration:{var(p)}"></div>')
+    ink = next((var(p) for p, _ in colors if len(p) > 2 and p[1] == "ink"), "inherit")
+    on_accent = "#fff"
+    if first("action"):
+        alias = raw.get(first("action"), {}).get("text_on")
+        m = ALIAS.match(alias) if isinstance(alias, str) else None
+        if m and tuple(m.group(1).split(".")) in tokens:
+            on_accent = var(tuple(m.group(1).split(".")))
+        elif ("color", "ink", "on-action") in tokens:
+            on_accent = var(("color", "ink", "on-action"))
+
+    # What a token is for, when tokens.json gives no "$description"
+    HINTS = [
+        (("touch", "target", "tap", "hit"), "Smallest size of anything you tap or click (buttons, fields), so it's easy to hit."),
+        (("icon",), "Size of icons."),
+        (("focus",), "Thickness of the outline shown on the element that has keyboard focus."),
+        (("border", "stroke", "hairline"), "Thickness of borders around fields and containers."),
+        (("content", "max", "measure", "container", "page"), "Widest the content gets, so lines stay readable on large screens."),
+        (("scallop", "notch", "edge"), "Size of a decorative edge detail."),
+        (("control", "button", "input", "field", "height"), "Height of a control (button, field) at this size."),
+    ]
+
+    def hint(p, t):
+        if t.get("description"):
+            return t["description"]
+        key = p[-1].lower()
+        for words, text in HINTS:
+            if any(w in key for w in words):
+                return text
+        return ""
+
+    def row(p, t, demo, extra=""):
+        h_ = hint(p, t) if category(p) == "size" else (t.get("description") or "")
+        return (f'<div class="pv-row"><div class="pv-measure">{demo}</div><div><b>{esc(".".join(p[1:]))}</b> '
+                f'<small>{esc(css_value(t["value"]))}</small>{extra}<br>{code(p)}'
+                + (f'<br><span class="pv-hint">{esc(h_)}</span>' if h_ else "") + "</div></div>")
+
+    def size_demo(p, t):
+        key = p[-1].lower()
+        v = var(p)
+        if any(w in key for w in ("touch", "target", "tap", "hit")):
+            return (f'<div style="display:flex;align-items:center;justify-content:center;min-width:{v};height:{v};padding:0 12px;'
+                    f'border-radius:8px;background:{accent};color:{on_accent};font-size:13px;outline:1px dashed currentColor;outline-offset:4px">Tap</div>')
+        if "icon" in key:
+            return f'<svg width="100%" height="100%" style="width:{v};height:{v};color:{accent}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>'
+        if "focus" in key:
+            return (f'<div style="width:140px;height:40px;border-radius:6px;border:1px solid {edge};background:{surface};'
+                    f'outline:{v} solid {focus};outline-offset:2px;display:flex;align-items:center;padding:0 10px;color:{ink};font-size:13px">Focused field</div>')
+        if any(w in key for w in ("border", "stroke", "hairline")):
+            return (f'<div style="width:140px;height:40px;border-radius:6px;border:{v} solid {edge};background:{surface};'
+                    f'display:flex;align-items:center;padding:0 10px;color:{ink};font-size:13px;opacity:.9">Text field</div>')
+        if any(w in key for w in ("content", "max", "measure", "container", "page")):
+            n = number(t["value"])
+            label = f"{t['value']} wide" + (f" (about {round(n / 8)} characters of text)" if n else "")
+            return (f'<div style="width:100%"><div class="pv-ruler"></div><small>{esc(label)}</small></div>')
+        if any(w in key for w in ("control", "button", "input", "field", "height")):
+            return (f'<div style="height:{v};min-width:120px;padding:0 12px;border-radius:6px;border:1px solid {edge};background:{surface};'
+                    f'display:flex;align-items:center;color:{ink};font-size:13px">{esc(p[-1])}</div>')
+        return f'<div style="width:min({v},100%);height:12px;background:currentColor;opacity:.35"></div>'
+
+    spacing = "".join(row(p, t, f'<div style="display:flex;gap:{var(p)}"><span class="pv-block"></span><span class="pv-block"></span></div>',
+                          " gap") for p, t in groups.get("spacing", []))
+    sizes = "".join(row(p, t, size_demo(p, t)) for p, t in groups.get("size", []))
+    radii = "".join(row(p, t, f'<div style="width:72px;height:48px;border:2px solid currentColor;border-radius:{var(p)}"></div>')
+                    for p, t in groups.get("radius", []))
+    shadows = "".join(row(p, t, f'<div style="width:96px;height:56px;background:{surface};box-shadow:{var(p)};border-radius:8px"></div>')
+                      for p, t in groups.get("shadow", []))
+    motion = "".join(row(p, t, f'<div class="pv-move" style="transition-duration:{var(p)}"></div>') for p, t in groups.get("motion", []))
     links = "".join(f'<link rel="stylesheet" href="{esc(u)}">' for u in css_links)
 
     def section(name, inner, note=""):
@@ -695,6 +759,9 @@ h1{{font-size:18px;margin:0}} h2{{font-size:13px;letter-spacing:.02em;margin:40p
 .pv-prims{{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px}}
 .pv-prim div{{height:48px;border-radius:6px;border:1px solid #8883}}
 .pv-measure{{display:flex;align-items:center;min-height:24px}}
+.pv-block{{display:inline-block;width:28px;height:28px;border-radius:4px;background:currentColor;opacity:.45}}
+.pv-ruler{{height:10px;border:1px solid currentColor;border-top:0;opacity:.6;margin-bottom:4px}}
+.pv-hint{{display:inline-block;margin-top:2px;font-size:13px;opacity:.85}}
 .pv-move{{width:24px;height:24px;border-radius:50%;background:currentColor;opacity:.6;transition-property:transform}}
 .pv-row:hover .pv-move{{transform:translateX(160px)}}
 .pv-badge{{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;margin-left:4px}}
@@ -706,14 +773,14 @@ button{{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #8886;b
 @media (max-width:640px){{.pv-row{{grid-template-columns:1fr}}}}
 </style>"""
     page = f"""<header><h1>{esc(title)}</h1>
-<button type="button" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';this.textContent=r.dataset.theme==='dark'?'Light mode':'Dark mode'">Dark mode</button></header>
+<button type="button" onclick="var r=document.documentElement;var dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark'">Switch light / dark</button></header>
 <main>
 <p class="pv-note">Generated from <code>design/tokens.json</code>. Every sample uses the project's own tokens; badges are WCAG contrast (4.5:1 for text). Rebuild after changing the tokens.</p>
 {section("Colors", "".join(rows), "Text colors are shown on " + (esc(".".join(base[1:])) if base else "the page") + "; fills with text show their declared ink.")}
 {section("Palette (primitives, for aliases only)", f'<div class="pv-prims">{prim}</div>' if prim else "")}
 {section("Type", type_rows)}
-{section("Spacing", spacing)}
-{section("Sizes", sizes)}
+{section("Spacing", spacing, "The space between two elements.")}
+{section("Sizes", sizes, "Fixed measures the components share.")}
 {section("Radius", radii)}
 {section("Shadows", shadows)}
 {section("Motion", motion, "Hover a row to see the duration.")}
