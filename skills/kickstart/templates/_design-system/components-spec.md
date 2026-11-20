@@ -1,6 +1,6 @@
 # Base components: contract
 
-Not an output file. The contract every stack's base components meet; write them in the stack's idiom (see `platforms.md` for location and style mechanism). Few and good: these six, nothing else until a screen needs it.
+Not an output file. The contract every stack's base components meet; write them in the stack's idiom (the platform file in `platforms/` gives the location and style mechanism). Few and good: these six, nothing else until a screen needs it.
 
 ## Rules for all components
 

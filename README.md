@@ -131,8 +131,9 @@ skills/kickstart/
   references/                # loaded on demand: Superpowers, mini-design, stacks, generation, design system
   templates/_base/           # generic templates
   templates/<stack>/         # per-stack overrides and stack.md
-  templates/_design-system/  # tokens, DESIGN.md, component inventory and contract, platforms and lint rules
+  templates/_design-system/  # tokens, DESIGN.md, component inventory and contract, one file per platform
   scripts/build_tokens.py    # tokens.json → CSS / Tailwind / SwiftUI / TypeScript; diff; check
+  scripts/kickstart_files.py # .gitignore, .editorconfig, settings, AGENTS.md and checks, without the model
 ```
 
 To try a local checkout without installing it: `claude --plugin-dir /path/to/project-kickstart`. Before opening a PR, run `claude plugin validate .` and `claude plugin validate skills`.

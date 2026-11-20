@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-20
+
+### Changed
+
+- About 23% cheaper per kickstart, with the same output quality. On the same web-app test, 0.2.0 cost 3.89 USD with 71 model calls in generation; 0.3.0 cost 3.01 USD with 50, and re-read 58% less context. Build, tests, lint and every check passed in both.
+- New `scripts/kickstart_files.py` does the mechanical work without the model: `.gitignore` and `.editorconfig` (base + stack, merged into a scaffold's), copying `build_tokens.py`, the settings JSON (refuses destructive commands), `AGENTS.md`, and the post-generation checks.
+- `SKILL.md` is a third shorter, and adds a rule to work in few round trips: batch reads and writes, chain shell commands, never read a file only to copy it.
+- Design-system references are split so each run loads only what it needs: `design-system.md` (core), `design-import.md` (Claude Design, Figma, other sources), `design-sync.md` (sync mode), and one platform file each for web, SwiftUI, Blazor, React Native and other stacks.
+
+### Removed
+
+- Per-stack `claude/settings.json` templates; the allow-list is now built from the commands actually written in `CLAUDE.md`.
+
 ## [0.2.0] - 2026-11-20
 
 ### Added
