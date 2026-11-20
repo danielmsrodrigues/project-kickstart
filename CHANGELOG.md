@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.6.1] - 2026-11-20
+
+### Changed
+
+- The design-system page explains what it shows:
+  - Sizes are drawn as the thing they size: a tap target, an icon, a field with its border, a focused field, a control height, and a ruler for the content width.
+  - Spacing is shown as the gap between two blocks.
+  - Every size has a one-line explanation, taken from the token's `$description` or a built-in hint for common names.
+- The samples use the project's own button, border and focus colors, and button text uses the button's declared text color.
+- The theme button reads "Switch light / dark", and switches correctly when the page started in the system's dark mode.
+
 ## [0.6.0] - 2026-11-20
 
 ### Added
