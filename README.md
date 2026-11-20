@@ -47,6 +47,64 @@ You don't have to choose the technology. If you don't say, Claude suggests one a
 
 A complete kickstart takes about 10 to 20 minutes, most of it Claude working while you wait.
 
+## Example prompts
+
+One sentence is enough. Add more only if you already know it.
+
+**Starting something new**
+
+```
+/kickstart booking app for a small barbershop
+```
+```
+/kickstart online menu and table reservations for a restaurant, in React
+```
+```
+/kickstart internal dashboard to track our team's support tickets
+```
+```
+/kickstart iPhone app for logging gym workouts, in SwiftUI
+```
+```
+/kickstart REST API for a library's book loans, in .NET, no screens
+```
+```
+/kickstart command-line tool that renames photos by the date they were taken, in Python
+```
+
+**With details you already know**
+
+```
+/kickstart booking app for a hair salon. Clients book online, staff see the day's schedule. Next.js and Supabase. Write the docs in Portuguese.
+```
+```
+/kickstart landing page for a bakery. Warm and handmade look, nothing like a generic startup site.
+```
+```
+/kickstart dashboard for our sales team. The design is in this Claude Design export: ~/Downloads/sales-dashboard.zip
+```
+
+**A project that already exists**
+
+```
+/kickstart
+```
+```
+/kickstart this is our company website, set it up so Claude understands it
+```
+
+**Bringing in a design later** (`/tokens-sync`)
+
+```
+/tokens-sync ~/Downloads/new-brand-colors.zip
+```
+```
+/tokens-sync the designer changed the main color and the fonts in Figma, here's the export: ~/Downloads/figma-variables.json
+```
+```
+/tokens-sync our colors are scattered around the CSS, put them in one place without changing how the site looks
+```
+
 ## What you get
 
 For a web app with screens, started from an empty folder:
