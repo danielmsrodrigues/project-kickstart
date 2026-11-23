@@ -18,7 +18,7 @@ Look first: `tokens.*`, CSS full of `--color-*` variables, a Tailwind theme, a S
 
 ## 1. Origin
 
-One question, four choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation.
+One question, four choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation. When nothing in the repo or the conversation points at a source, put **c) None** first, marked as recommended.
 
 - **a) Claude Design export or handoff**, or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../kickstart-design/references/design-import.md`.
 - **d) An existing brand** (a known company, the client's own identity): the look is the brand's, not ours to invent.

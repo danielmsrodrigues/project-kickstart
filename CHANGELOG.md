@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.8.1] - 2026-11-23
+
+### Fixed
+
+- **The design skills are invoked, not just read.** A test run never called impeccable or taste-skill: it drew the directions by hand from their rules. Using a skill now means invoking it with the Skill tool at the moment `design-skills.md` names, and the skill checks that it did before showing the directions and before the report.
+- **Directions are real pages.** Each crafted direction is a full page at 1440 wide, built by taste-skill for a site or impeccable for app screens, with photographs where the product is something people look at. No more three miniatures side by side in plain HTML.
+- **A bar instead of a gimmick.** "The one bold move" is gone; each page must be one a good design team would publish as it is.
+- **The design origin question** puts "None" first, as recommended, when nothing in the repo or conversation points at a source.
+- taste-skill also covers portfolio sites, and leads every design step when the site is the whole project.
+
 ## [0.8.0] - 2026-11-23
 
 ### Added
