@@ -42,19 +42,23 @@ Make **three directions that genuinely differ**, each a different answer to the 
 - the 4 to 6 core colors with roles;
 - the type pair;
 - radius and density;
-- the one bold move;
+- what makes it look finished: the layout idea and the imagery (photographs, product shots, drawings);
 - which references it draws on.
 
 Each direction must pass the generic-defaults check in `design-system.md` and the contrast script (`contrast --pairs`) before it's shown.
 
-**Draw them.** Write one HTML page, outside the repo, that renders the **same real screen of the app** three times, side by side or stacked, one per direction. Pick the screen where the brand shows most, such as choosing a service and time, or the order summary. When the project also has a marketing or company site, add that site's first screen under each direction (`design-skills.md`, taste-skill). Use real copy in the app's language, plain HTML and CSS with each direction's values, and Google Fonts. Before writing it, read impeccable's `craft-floor.md` and use `emil-design-eng` for the interactive states when they are installed (`design-skills.md`); otherwise load `frontend-design` if available.
-- **Publishing:** if you can publish HTML (Artifact tool), publish it privately and give the link. Otherwise give the file path.
-- **Visual self-review:** with a browser tool, or Playwright when there is none (`design-skills.md`), open it and take one screenshot. Check it against the generic defaults and your own direction sentences. Fix what reads as template, once, before showing it.
+**Draw them, each as a real page.** Each direction gets its own full page at real size, as it would ship: 1440 wide, the first screen and at least two more sections for a site, or the main screen for an app. Never three miniatures side by side.
+- **Who draws.** For a marketing, company or portfolio site, invoke `taste-skill:design-taste-frontend` with the Skill tool and let it build each page with its own process, checker and finish gate. For app screens, invoke `impeccable:impeccable` and build each page through its new-work flow. Neither installed: invoke `frontend-design`; none: draw them yourself. `design-skills.md` says what else each one adds.
+- **Imagery.** When the product sells something people look at (spaces, buildings, food, objects, people), the page shows photographs: ones the user gave, or licensed stand-ins named as stand-ins. Never fake a picture with boxes, lines or CSS shapes.
+- **The bar.** Before showing a page, ask: would a good design team publish it as it is? Placeholder names, a form where a button would do, a gimmick standing in for content, or text where an image belongs mean no. The three must differ in layout, type, color and imagery, not just tint.
+- **Copy:** real, in the product's language. Fonts: Google Fonts or the skill's own sources.
+- **Publishing:** if you can publish HTML (Artifact tool), publish each page privately and give the three links. Otherwise give the file paths.
+- **Visual self-review:** with a browser tool, or Playwright when there is none (`design-skills.md`), look at each page at 1440 and 390 wide. Fix what fails the bar, then look once more, before showing them.
 
 Then ask, with buttons when the question tool exists: which direction (A, B or C), or a mix ("B's colors with A's type"). The chosen direction becomes the token values in step 2 of `design-system.md`.
 
 Then save the result in the repo, as part of the confirmed file list:
-- the chosen direction's drawing at `docs/design/direction.html`: the visual reference for building the real screens, which keeps the look from being lost between this step and the implementation;
+- the chosen direction's page at `docs/design/direction.html` (with its images, or links to them): the visual reference for building the real screens, which keeps the look from being lost between this step and the implementation;
 - the references in `docs/DESIGN.md` under "References", each with its link and what was taken from it;
 - a line in `docs/DESIGN.md` pointing at `docs/design/direction.html`.
 
@@ -69,4 +73,4 @@ Design them from the chosen direction and its references. They are what makes th
 
 ## Cost
 
-This depth costs roughly twice the plain step: the research, one drawn page and two or three extra components. The plain depth skips sections 1 to 3.
+This depth costs roughly three times the plain step: the research, three full pages and two or three extra components. The plain depth skips sections 1 to 3.

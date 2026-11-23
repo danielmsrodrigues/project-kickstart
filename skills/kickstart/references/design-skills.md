@@ -6,6 +6,8 @@ Read this at the start of step 3b, and in `kickstart-design` before creating or 
 
 Check once, in one batch, and say in one line which you found.
 
+**Using a skill means invoking it with the Skill tool** (`impeccable:impeccable`, `taste-skill:design-taste-frontend`, `emil-design-eng`, `playwright-cli`) at the moment the table below names. Reading this file, or applying a skill's rules from memory, is not using it. Before showing the directions, and before the step 4 report, check that every installed skill the table names for that moment was invoked in this run; if one wasn't, invoke it and redo that part.
+
 | Skill | Installed when | Install (for the README line and the report) |
 |-------|----------------|-----------------------------------------------|
 | **impeccable** | `impeccable` or `impeccable:impeccable` is in your available skills | `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` |
@@ -23,24 +25,25 @@ Never install one unasked. If none are installed, carry on with `frontend-design
 | Direction (quick or crafted) | leads, for app UI | leads, for a marketing or company site | | |
 | Generic-defaults check | its absolute bans | its anti-slop rules, site surfaces only | | |
 | Tokens | | | motion and shadow values | |
-| Drawn directions, components | craft floor before writing | site sections only | states, press and hover, transitions | |
+| Drawn directions | builds each page, for app UI | builds each page, for a site | states, press and hover, transitions | screenshots |
+| Components | craft floor before writing | | states, press and hover, transitions | |
 | Visual check | `audit` | | `review-animations` when there's motion | screenshots |
 | `CLAUDE.md` | a line | a line, if the project has a site | a line | a line |
 
 ### impeccable
 
 - **PRODUCT.md first.** Before the direction, write `docs/PRODUCT.md` in impeccable's product schema (its `reference/init.md`, "Write PRODUCT.md": copy the `impeccable:product-schema` comment and only the sections the design answered). Fill it from the step 1 design: users, purpose, positioning, constraints, brand commitments, evidence on hand. impeccable finds files in `docs/`, so it won't interview the user again. Add it to the confirmed list.
-- **The direction.** Invoke `impeccable` for the direction of the product's main screen, with its mode from the surface (an app screen is Operate; a landing page is Persuade). Ask it for the visual world only, and tell it this skill writes `docs/DESIGN.md` and `design/tokens.json`: no root `DESIGN.md`, `.impeccable/` config, or code. Its answer becomes the quick direction, or the starting point of the three crafted directions.
-- **Crafted depth:** the research and the user's reaction come first, as `design-research.md` says. Then use impeccable to build each of the three directions from the references the user picked, one world per direction; they must still differ as that file requires.
+- **The direction.** Invoke `impeccable` for the direction of the product's main screen, with its mode from the surface (an app screen is Operate; a landing page is Persuade). Ask it for the visual world only, and tell it this skill writes `docs/DESIGN.md` and `design/tokens.json`: no root `DESIGN.md`, `.impeccable/` config, or code in the repo (the drawn directions live outside it until one is chosen). Its answer becomes the quick direction, or the starting point of the three crafted directions.
+- **Crafted depth:** the research and the user's reaction come first, as `design-research.md` says. Then, for app UI, invoke impeccable to build each of the three directions as a full page through its new-work flow, one world per direction, from the references the user picked.
 - **Before writing UI** (the drawn directions page, the base components, the signature components): read its `reference/craft-floor.md` once, right before the first of these, and follow it.
 - **After step 4 builds:** run its `audit` on the design-system page or the base components. Fix the P0 and P1 findings; list the rest in the report.
 
 ### taste-skill
 
-It is built for marketing and company websites: one section per screen, real photographs, a hero entrance, and a browser gate. **Use it only when the project has such a site** (a landing page, a company or shop site), and only for that surface. For app screens, dashboards and forms its rules don't fit: use impeccable or `frontend-design` instead.
-- **For the site:** take its kind-of-business decision and its house rules into the direction, and its anti-slop rules into the generic-defaults check.
+It is built for websites: one section per screen, real photographs, a hero entrance, and a browser gate. **Use it when the project has a site** (a landing page, a company, shop or portfolio site), for that surface. When the site is the whole project, it leads every design step. For app screens, dashboards and forms its rules don't fit: use impeccable or `frontend-design` instead.
+- **For the site:** invoke it for the direction. In the crafted depth it builds each of the three directions as a full page, with its photographs, checker and finish gate (`design-research.md`).
 - **One design system for both.** The app and the site share `design/tokens.json`; there are no separate directions or tokens for the site. In the crafted depth, the drawn page shows each direction twice: the app screen, then the site's first screen (hero only) following taste-skill's rules, so the user judges the direction on both.
-- **The pages themselves** are product code. They come after the plan, not in the kickstart.
+- **The real pages** are product code and come after the plan. The chosen direction's page is saved as `docs/design/direction.html`, the reference they're built from.
 
 ### Emil Kowalski's skills
 
