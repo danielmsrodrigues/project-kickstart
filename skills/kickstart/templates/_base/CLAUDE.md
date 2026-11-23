@@ -46,6 +46,7 @@ Delete this comment block.
 - Screens compose components. New styles go into a component or the tokens, never into a screen.
 - A new or changed component updates `{{COMPONENTS_DIR}}/README.md` in the same commit (and `design/system/entry.ts` when it's new); then `/kickstart-design` refreshes the published design system.
 - For UI work, follow [docs/DESIGN.md](docs/DESIGN.md){{FRONTEND_DESIGN: append " and use the frontend-design skill" ONLY if it is installed}}.
+{{DESIGN_SKILL_LINES: one line per installed design skill, from references/design-skills.md "The CLAUDE.md lines"; none when none is installed}}
 }}
 
 ## Don'ts

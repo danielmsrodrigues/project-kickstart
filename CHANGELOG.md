@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] - 2026-11-23
+
+### Added
+
+- **Design skills.** When they're installed, the design-system step hands each one the part it's best at (`references/design-skills.md`):
+  - **impeccable** leads the direction for app screens, gets `docs/PRODUCT.md` so it never re-interviews the user, sets the bans for the generic-defaults check, and audits the base components after the build;
+  - **taste-skill** leads only when the project has a marketing or company site;
+  - **Emil Kowalski's skills** set the motion and shadow tokens and the interaction states of the components;
+  - **Playwright** takes the screenshots for the visual check when there's no browser tool.
+- The kickstart still writes the files (`docs/DESIGN.md`, `design/tokens.json`, the components); the skills advise and check. `CLAUDE.md` gets one line per installed skill, and the report lists the missing ones with their install line.
+
 ## [0.7.1] - 2026-11-20
 
 ### Added

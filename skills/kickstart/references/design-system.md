@@ -31,10 +31,11 @@ One question, four choices, as buttons when you have the question tool. Ask it e
   Then ask the **depth**, once, as buttons. Recommend **Crafted** for a product with screens people will judge by its look:
   - **Crafted**: research references (Dribbble, Behance, Mobbin, modern sites, the product's physical world), draw three directions on a real screen of the app, and design the product's signature components. About twice the cost of this step. Follow `design-research.md`, then continue at the contrast check below.
   - **Quick**: one direction, proposed in text, as follows.
-  - if `frontend-design` is available, invoke it and take its direction;
+  - if impeccable is installed (or taste-skill, for a marketing or company site), take the direction as `design-skills.md` says;
+  - otherwise, if `frontend-design` is available, invoke it and take its direction;
   - otherwise propose one yourself: a one-sentence direction, a 4-6 color palette, one or two type families with a scale, a spacing scale.
 
-  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why.
+  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults; with impeccable, its absolute bans in `craft-floor.md`; with taste-skill, on a site, its anti-slop rules. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why.
 
   **Then compute contrast; never estimate it.** List every pair the design will actually use: each text color on each background, the text on every filled button, badge and status color (such as a "ready" pill), and borders and focus rings on the backgrounds, in light and dark. Run `python3 <skill>/scripts/build_tokens.py contrast --pairs "FG:BG" ...` (add `:3` for borders and focus rings). Fix every FAIL before showing anything; the user is not expected to catch contrast problems. Show the ratios from the script output, not your own. Then show the direction and get a yes.
 
@@ -52,6 +53,7 @@ Settle the values for `design/tokens.json` (W3C DTCG) with the structure of `tok
   Derive them from the palette.
 - **Aliases:** semantic tokens alias primitives, and dark values (`$extensions.modes.dark`) are aliases too.
 - **Contrast is declared, then checked by the script.** Every `color.action.*` and `color.status.*` fill gets `"$extensions": {"textOn": "{color.ink.<ink>}"}`, naming the ink used on it. Text that is itself colored (a red error message) is an `ink.*` token, not a status color. Divider-only edges get `"decorative": true`; the rest must reach 3:1. `python3 design/build_tokens.py contrast design/tokens.json` must pass before you show the token set and again after writing it.
+- **Motion and shadow:** with Emil Kowalski's skills installed, set them by `emil-design-eng`'s rules (`design-skills.md`).
 - **Names:** spacing as steps (`1x`, `2x`, `4x`), roles by meaning (`action.primary`, not `blue`). A font family and a font weight never share a name.
 
 In step 4:
@@ -64,13 +66,14 @@ In step 4:
 
 ## 3. Components
 
-The six in `components-spec.md`, in the platform's idiom and location, shown in every variant by the published design system (`references/preview.md`). With a component library, follow "Component libraries" in `platforms/other.md`. For UI code, invoke `frontend-design` when available.
+The six in `components-spec.md`, in the platform's idiom and location, shown in every variant by the published design system (`references/preview.md`). With a component library, follow "Component libraries" in `platforms/other.md`. For UI code, follow `design-skills.md` (impeccable's craft floor, Emil Kowalski's interaction rules); otherwise invoke `frontend-design` when available.
 
 ## 4. Docs
 
 - `docs/DESIGN.md` from its template: the one-sentence direction, token roles (names, not values), layout and motion, and a concrete "Avoid" list.
 - The inventory, `<components dir>/README.md`, from `components-README.md`; use `components/README.md` when the platform has no folder of its own.
-- The UI block in `CLAUDE.md` (in `_base/CLAUDE.md`), with real paths.
+- `docs/PRODUCT.md` when impeccable is installed (`design-skills.md`).
+- The UI block in `CLAUDE.md` (in `_base/CLAUDE.md`), with real paths and the design-skill lines from `design-skills.md`.
 
 ## 5. Enforcement
 

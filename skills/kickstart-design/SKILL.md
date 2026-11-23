@@ -28,7 +28,7 @@ Look at the repo once (one batch): `design/tokens.json`, other `tokens.*`, CSS c
 | `design/tokens.json`, and the user only wants to see it | **Show**: follow `<skill>/../kickstart/references/preview.md` |
 | `design/tokens.json` | **Sync**: follow `references/design-sync.md` |
 | A design system in another form (CSS variables, a Tailwind theme, a `Theme` type) but no `tokens.json` | **Adopt**, below |
-| No design system | **Create**: follow `<skill>/../kickstart/references/design-system.md` from "1. Origin", and generate only the design-system files (no CLAUDE.md, ADR or configs). If the repo has no `CLAUDE.md` either, suggest `/kickstart` instead. |
+| No design system | **Create**: read `<skill>/../kickstart/references/design-skills.md`, then follow `<skill>/../kickstart/references/design-system.md` from "1. Origin", and generate only the design-system files (no CLAUDE.md, ADR or configs). If the repo has no `CLAUDE.md` either, suggest `/kickstart` instead. |
 
 For reading the export itself (Claude Design bundle, Figma variables JSON, a tokens file, a reference site), see `references/design-import.md`.
 
@@ -49,7 +49,7 @@ Until the user says yes, the repo stays untouched: draft and build in a temporar
    - Write or update `docs/DESIGN.md` and the inventory from the kickstart templates.
    - Add the platform's lint warning (`<skill>/../kickstart/templates/_design-system/platforms/<platform>.md`).
    - Add the token commands to `CLAUDE.md` if it exists.
-6. Verify: compare the compiled output before and after (every class the app uses resolves to the same value), the build passes, `python3 design/build_tokens.py check <ui source>` runs (report its findings; fixing hardcoded values in screens is a follow-up, not part of adopting), and the UI looks the same where you can check it.
+6. Verify: compare the compiled output before and after (every class the app uses resolves to the same value), the build passes, `python3 design/build_tokens.py check <ui source>` runs (report its findings; fixing hardcoded values in screens is a follow-up, not part of adopting), and the UI looks the same where you can check it (with a browser tool, or Playwright screenshots before and after when it's installed; see `<skill>/../kickstart/references/design-skills.md`).
 
 If the user brought a new export too, adopt first, then sync the export.
 

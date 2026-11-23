@@ -58,19 +58,19 @@ Flag commands that can't work yet. Then wait for the yes; this can't be skipped 
 
 ### 3b. Design system (projects with a UI)
 
-Read `references/design-system.md` and follow it. It covers asking where the design comes from (Claude Design, another source, an existing brand, or none), how deep to go (a quick direction, or crafted: research on Dribbble, Behance, Mobbin and modern sites, three drawn directions and signature components), documenting an existing system instead of building a parallel one, the tokens, the base components, `DESIGN.md`, the inventory and the lint rule. It ends with its own additions to the list and a yes. A CLI, API or library skips 3b.
+Read `references/design-skills.md` first: it says which of impeccable, taste-skill, Emil Kowalski's skills and Playwright are installed and what each one takes over. Then read `references/design-system.md` and follow it. It covers asking where the design comes from (Claude Design, another source, an existing brand, or none), how deep to go (a quick direction, or crafted: research on Dribbble, Behance, Mobbin and modern sites, three drawn directions and signature components), documenting an existing system instead of building a parallel one, the tokens, the base components, `DESIGN.md`, the inventory and the lint rule. It ends with its own additions to the list and a yes. A CLI, API or library skips 3b.
 
 ### 4. Generate
 
 1. Run the `run` lines as `references/scaffolding.md` says.
 2. Follow `references/generating-files.md`: the script makes `.gitignore`, `.editorconfig`, the settings JSON, `AGENTS.md` and the checks; you fill the doc templates.
 3. Write the design-system files from 3b.
-4. Run the checks, plus build, test and lint when the dependencies are installed. Fix what fails.
+4. Run the checks, plus build, test and lint when the dependencies are installed. Fix what fails. With a UI, also run the visual check and the audits in `references/design-skills.md` for the skills that are installed.
 5. With a design system, show it: follow `references/preview.md`. It generates a page of the tokens, publishes it when you can publish HTML pages, and ends with the link.
 
 ### 5. Git
 
-Report what was created and what failed, with the design-system preview link or path first when there is one. Then ask once whether to run `git init` (if needed) and make the initial commit. On yes, stage only the files this skill created or the user approved changing.
+Report what was created and what failed, with the design-system preview link or path first when there is one. For a UI, add one line naming the design skills used and, for those missing, their install line. Then ask once whether to run `git init` (if needed) and make the initial commit. On yes, stage only the files this skill created or the user approved changing.
 
 ### 6. Hand off
 
@@ -92,4 +92,6 @@ A project that already has a design system and a new Claude Design, Figma or tok
 | Leftover `{{PLACEHOLDER}}` or TODO sections | Fill them or delete the section. |
 | A second design system next to an existing one | Document and extend the one that's there. |
 | Applying a design export directly | `/kickstart-design`: diff first, apply on a yes. |
+| Letting impeccable or taste-skill write a root `DESIGN.md` or app code | They advise; this skill writes `docs/DESIGN.md`, `docs/PRODUCT.md` and the tokens. |
+| Applying taste-skill's website rules to app screens | taste-skill is for marketing and company sites only. |
 | Reading `build_tokens.py` or a template just to copy it | `kickstart_files.py` copies; `--help` explains. |

@@ -47,9 +47,9 @@ Make **three directions that genuinely differ**, each a different answer to the 
 
 Each direction must pass the generic-defaults check in `design-system.md` and the contrast script (`contrast --pairs`) before it's shown.
 
-**Draw them.** Write one HTML page, outside the repo, that renders the **same real screen of the app** three times, side by side or stacked, one per direction. Pick the screen where the brand shows most, such as choosing a service and time, or the order summary. Use real copy in the app's language, plain HTML and CSS with each direction's values, and Google Fonts. Load `frontend-design` if available while writing it.
+**Draw them.** Write one HTML page, outside the repo, that renders the **same real screen of the app** three times, side by side or stacked, one per direction. Pick the screen where the brand shows most, such as choosing a service and time, or the order summary. When the project also has a marketing or company site, add that site's first screen under each direction (`design-skills.md`, taste-skill). Use real copy in the app's language, plain HTML and CSS with each direction's values, and Google Fonts. Before writing it, read impeccable's `craft-floor.md` and use `emil-design-eng` for the interactive states when they are installed (`design-skills.md`); otherwise load `frontend-design` if available.
 - **Publishing:** if you can publish HTML (Artifact tool), publish it privately and give the link. Otherwise give the file path.
-- **Visual self-review:** with a browser tool, open it and take one screenshot. Check it against the generic defaults and your own direction sentences. Fix what reads as template, once, before showing it.
+- **Visual self-review:** with a browser tool, or Playwright when there is none (`design-skills.md`), open it and take one screenshot. Check it against the generic defaults and your own direction sentences. Fix what reads as template, once, before showing it.
 
 Then ask, with buttons when the question tool exists: which direction (A, B or C), or a mix ("B's colors with A's type"). The chosen direction becomes the token values in step 2 of `design-system.md`.
 
