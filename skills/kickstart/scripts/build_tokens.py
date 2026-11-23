@@ -40,6 +40,9 @@ Usage (Python 3.8+, standard library only):
       Finishes a components build for the same format: the @ds-bundle header on bundle.js, @font-face
       rules removed from bundle.css (tokens.css declares the fonts), forbidden "</script"/"<!--" checks,
       copied to components/bundle.js and components/bundle.css.
+  python3 design/build_tokens.py ds-foundations design/tokens.json --out <dir>/project
+      Writes showcase cards (group "Foundations") that draw spacing, radius, sizes and motion with
+      the system's own CSS variables, because the type's token tables show those only as numbers.
   python3 design/build_tokens.py contrast design/tokens.json
   python3 design/build_tokens.py contrast --pairs "#ffffff:#b4234f" "#3a2320:#6e8f5a:4.5" ...
 
@@ -1033,6 +1036,118 @@ def finish_ds_bundle(dist, namespace, components, out_dir):
     return len(js), len(css)
 
 
+SIZE_HINTS = [
+    (("touch", "target", "tap", "hit"), "Smallest size of anything you tap or click, so it's easy to hit."),
+    (("icon",), "Size of icons."),
+    (("focus",), "Thickness of the outline on the element that has keyboard focus."),
+    (("border", "stroke", "hairline"), "Thickness of borders around fields and containers."),
+    (("content", "max", "measure", "container", "page"), "Widest the content gets, so lines stay readable."),
+    (("control", "button", "input", "field", "height"), "Height of a control at this size."),
+]
+
+
+def p_key(p):
+    return p[-1].lower()
+
+
+def build_ds_foundations(path, out_dir):
+    """Showcase cards for Claude's Design System type, drawn with its tokens.css variables."""
+    import html as h
+    raw = flatten(load(path))
+    tokens = resolve(raw)
+    esc = lambda s: h.escape(str(s))
+    v = lambda p: f"var(--{kebab(p)})"
+    colors = [p for p in tokens if category(p) == "color" and not is_primitive(p)]
+    pick = lambda grp, word="": next((p for p in colors if len(p) > 2 and p[1] == grp and word in p[-1]), None)
+    accent, edge = pick("action", "primary") or pick("action"), pick("edge", "control") or pick("edge")
+    focus, surface, ink = pick("action", "focus"), pick("surface", "raised") or pick("surface"), pick("ink", "default") or pick("ink")
+    on_accent = None
+    if accent:
+        m = ALIAS.match(raw[accent].get("text_on") or "")
+        on_accent = tuple(m.group(1).split(".")) if m else pick("ink", "on-action")
+    c = lambda p, fallback: v(p) if p else fallback
+    fams = [p for p, t in tokens.items() if category(p) == "font" and t["type"] == "fontFamily"]
+    # The type's tokens.css names families --font-<key> (key = the family token's last segment).
+    body_p = next((p for p in fams if "body" in p[-1]), fams[0]) if fams else None
+    body_font = f"var(--font-{p_key(body_p)}, {v(body_p)}), system-ui, sans-serif" if body_p else "system-ui, sans-serif"
+    base_css = (f"body{{margin:0;font:14px/1.45 {body_font};color:{c(ink, 'inherit')};background:{c(surface, 'transparent')}}}"
+                ".row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:center;"
+                "padding:10px 16px;border-top:1px solid color-mix(in srgb, currentColor 14%, transparent)}"
+                ".row:first-child{border-top:0} .row>div{min-width:0} b{font-weight:600} small{opacity:.7}"
+                ".blk{display:inline-block;width:24px;height:24px;border-radius:3px;background:currentColor;opacity:.4}"
+                "code{font-size:12px;opacity:.7}")
+
+    def card(name, rows, note, row_h=56):
+        height = max(120, min(4000, 24 + len(rows) * row_h))
+        body = "".join(f'<div class="row"><div>{demo}</div><div><b>{esc(label)}</b> <small>{esc(value)}</small>'
+                       f'<br><code>--{esc(var_name)}</code>{"<br>" + esc(hint) if hint else ""}</div></div>'
+                       for demo, label, value, var_name, hint in rows)
+        doc = (f'<!-- @dsCard group="Foundations" height={height} page subtitle="{esc(note)}" -->\n'
+               f"<!doctype html>\n<html>\n<head><meta charset=\"utf-8\"><title>{esc(name)}</title>"
+               f"<style>{base_css}</style></head>\n<body>\n{body}\n</body>\n</html>\n")
+        os.makedirs(os.path.join(out_dir, "components", name), exist_ok=True)
+        with open(os.path.join(out_dir, "components", name, "preview.html"), "w", encoding="utf-8") as f:
+            f.write(doc)
+        return name
+
+    def hint_for(p):
+        if tokens[p].get("description"):
+            return tokens[p]["description"]
+        key = p[-1].lower()
+        return next((text for words, text in SIZE_HINTS if any(w in key for w in words)), "")
+
+    def size_demo(p):
+        key, x = p[-1].lower(), v(p)
+        if any(w in key for w in ("touch", "target", "tap", "hit")):
+            return (f'<span style="display:inline-flex;align-items:center;justify-content:center;min-width:{x};height:{x};'
+                    f'padding:0 12px;border-radius:8px;background:{c(accent, "currentColor")};color:{c(on_accent, "#fff")};'
+                    f'outline:1px dashed currentColor;outline-offset:4px">Tap</span>')
+        if "icon" in key:
+            return (f'<svg style="width:{x};height:{x};color:{c(accent, "currentColor")}" viewBox="0 0 24 24" fill="none" '
+                    f'stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>')
+        field = (f'display:inline-flex;align-items:center;width:150px;height:40px;padding:0 10px;border-radius:6px;'
+                 f'background:{c(surface, "transparent")};font-size:13px;')
+        if "focus" in key:
+            return f'<span style="{field}border:1px solid {c(edge, "currentColor")};outline:{x} solid {c(focus, "currentColor")};outline-offset:2px">Focused field</span>'
+        if any(w in key for w in ("border", "stroke", "hairline")):
+            return f'<span style="{field}border:{x} solid {c(edge, "currentColor")}">Text field</span>'
+        if any(w in key for w in ("content", "max", "measure", "container", "page")):
+            n = number(tokens[p]["value"])
+            chars = f" · about {round(n / 8)} characters of text" if n else ""
+            return f'<div style="height:10px;border:1px solid currentColor;border-top:0;opacity:.6"></div><small>{esc(tokens[p]["value"])} wide{chars}</small>'
+        if any(w in key for w in ("control", "button", "input", "field", "height")):
+            return f'<span style="{field}height:{x};border:1px solid {c(edge, "currentColor")}">{esc(p[-1])}</span>'
+        return f'<div style="width:min({x},100%);height:12px;background:currentColor;opacity:.35"></div>'
+
+    made = []
+    groups = {}
+    for p, t in tokens.items():
+        if not t["line_height_of"]:
+            groups.setdefault(category(p), []).append(p)
+    if groups.get("spacing"):
+        rows = [(f'<span style="display:inline-flex;gap:{v(p)}"><span class="blk"></span><span class="blk"></span></span>',
+                 p[-1], css_value(tokens[p]["value"]) + " gap", kebab(p), "") for p in groups["spacing"]]
+        made.append(card("Spacing", rows, "The space between two elements"))
+    if groups.get("radius"):
+        rows = [(f'<span style="display:inline-block;width:72px;height:44px;border:2px solid currentColor;border-radius:{v(p)}"></span>',
+                 p[-1], css_value(tokens[p]["value"]), kebab(p), tokens[p].get("description") or "") for p in groups["radius"]]
+        made.append(card("Radius", rows, "Corner radius, by role", 64))
+    if groups.get("size"):
+        rows = [(size_demo(p), p[-1], css_value(tokens[p]["value"]), kebab(p), hint_for(p)) for p in groups["size"]]
+        made.append(card("Sizes", rows, "Fixed measures the components share", 76))
+    if groups.get("motion"):
+        rows = [(f'<span class="mv" style="display:inline-block;width:20px;height:20px;border-radius:50%;'
+                 f'background:{c(accent, "currentColor")};animation:slide calc({v(p)} * 4) ease-in-out infinite alternate"></span>',
+                 p[-1], css_value(tokens[p]["value"]), kebab(p), "Shown four times slower, so you can see it.") for p in groups["motion"]]
+        made.append(card("Motion", rows, "Durations, slowed down to watch", 64))
+        mpath = os.path.join(out_dir, "components", "Motion", "preview.html")
+        doc = open(mpath, encoding="utf-8").read().replace(
+            "</style>", "@keyframes slide{from{transform:translateX(0)}to{transform:translateX(140px)}}"
+                        "@media (prefers-reduced-motion: reduce){.mv{animation:none}}</style>", 1)
+        open(mpath, "w", encoding="utf-8").write(doc)
+    return made
+
+
 # ---------- CLI ----------
 
 def main(argv=None):
@@ -1067,6 +1182,9 @@ def main(argv=None):
     db.add_argument("--namespace", required=True)
     db.add_argument("--components", required=True)
     db.add_argument("--out", required=True)
+    fd = sub.add_parser("ds-foundations")
+    fd.add_argument("source")
+    fd.add_argument("--out", required=True)
     k = sub.add_parser("contrast")
     k.add_argument("source", nargs="?")
     k.add_argument("--pairs", nargs="+")
@@ -1094,6 +1212,10 @@ def main(argv=None):
         if a.cmd == "ds-bundle":
             n_js, n_css = finish_ds_bundle(a.dist, a.namespace, [c.strip() for c in a.components.split(",") if c.strip()], a.out)
             print(f"bundle -> {a.out}/components: bundle.js {n_js // 1024} KB, bundle.css {n_css // 1024} KB")
+            return 0
+        if a.cmd == "ds-foundations":
+            made = build_ds_foundations(a.source, a.out)
+            print(f"foundations -> {a.out}/components: {', '.join(made) or 'none (no spacing, radius, size or motion tokens)'}")
             return 0
         if a.cmd == "contrast":
             if a.pairs:

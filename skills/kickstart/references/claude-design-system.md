@@ -61,13 +61,18 @@ Run these from the project root; `<plugin>` is two levels above this skill's dir
    - **The "Avoid" list.**
 
    Write it as imperative usage rules that name tokens, with no title and no build notes (`craft.md`).
-7. **The cover** (`components/Cover/preview.html`) last, as `cover.md` says, from the palette and the direction.
-8. **The index** (`project/design-system.json`): exactly as the type's `SKILL.md` describes, written in the last call. Set `namespace`, `libraries` and `lastChange` (`via`: "project-kickstart").
+7. **Foundations cards.** The type's token views show spacing, radius, sizes and durations only as numbers. Draw them with the system's own variables:
+   ```bash
+   python3 design/build_tokens.py ds-foundations design/tokens.json --out <dir>/project
+   ```
+   This writes `components/Spacing`, `Radius`, `Sizes` and `Motion` as showcase cards (`page`, group "Foundations"). Don't list them in the bundle header or `index.d.ts`: they are pages, not components.
+8. **The cover** (`components/Cover/preview.html`) last, as `cover.md` says, from the palette and the direction.
+9. **The index** (`project/design-system.json`): exactly as the type's `SKILL.md` describes, written in the last call. Set `namespace`, `libraries` and `lastChange` (`via`: "project-kickstart").
 
 ## Save and report
 
-Save with the type's own calls (`root` set to `<dir>`, the index last). Then follow "Tell the user" in `preview.md`: the link first, then one line on what it holds (cover, brand book, N colors in light and dark, type, N components with live previews).
+Save with the type's own calls (`root` set to `<dir>`, the index last). Then follow "Tell the user" in `preview.md`: the link first, then one line on what it holds (cover, brand book, N colors in light and dark, type, the foundations drawn, N components with live previews).
 
 ## Keeping it current
 
-When tokens, components, DESIGN.md or the voice change (a `/kickstart-design` sync, a new component), rebuild only what changed and revise the same system: tokens through the script, the bundle and the touched components' README and preview. Regenerate the cover only when the palette, name or display face changed.
+When tokens, components, DESIGN.md or the voice change (a `/kickstart-design` sync, a new component), rebuild only what changed and revise the same system: tokens and the foundations cards through the scripts, the bundle and the touched components' README and preview. Regenerate the cover only when the palette, name or display face changed.

@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.7.1] - 2026-11-20
+
+### Added
+
+- **Foundations cards in the Design System.** Claude Design's page shows spacing, radius, sizes and durations only as numbers. `build_tokens.py ds-foundations` adds showcase cards that draw them with the system's own variables, so an edit on the page shows in the drawing:
+  - spacing as the gap between blocks;
+  - radii as boxes;
+  - sizes as a tap target, an icon, a bordered field, a focused field and a width ruler, each with a one-line explanation;
+  - durations as a moving dot, slowed down to watch.
+- **"An existing brand" as a design origin.**
+  - The identity comes from the brand's guidelines, logo files, colors and licensed fonts, taken exactly.
+  - Logos are never drawn from memory, and a missing font gets a named stand-in.
+  - The skill confirms in one line that the project is for the brand or has its permission, and warns about trademark use otherwise.
+  - No visual research or three directions: the crafted depth only researches interface patterns and signature components.
+
 ## [0.7.0] - 2026-11-20
 
 ### Added
