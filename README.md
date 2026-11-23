@@ -158,14 +158,19 @@ Something went wrong, or you have an idea? [Open an issue](https://github.com/da
 
 ## Works best with
 
-Both are optional. Install them and project-kickstart uses them automatically.
+All are optional. Install them and project-kickstart uses them automatically.
 
 | Plugin | What it adds | Install |
 |--------|--------------|---------|
 | [Superpowers](https://github.com/obra/superpowers) | A better design conversation before anything is built, and a step-by-step plan for building the app afterwards. | `/plugin install superpowers@claude-plugins-official` |
 | [frontend-design](https://github.com/anthropics/claude-plugins-public/tree/main/plugins/frontend-design) | A more distinctive look when the design starts from scratch, and better-looking screens later. | `/plugin install frontend-design@claude-plugins-official` |
 
-If Claude Code doesn't find them, add the official marketplace first: `/plugin marketplace add anthropics/claude-plugins-official`.
+| [impeccable](https://github.com/pbakaus/impeccable) | Leads the look of app screens, writes `docs/PRODUCT.md` so later design work knows the product, and audits the base components before they're done. | `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` |
+| [taste-skill](https://github.com/Leonxlnx/taste-skill) | Leads the look when the project has a marketing or company site (only that site, not the app screens). | `/plugin marketplace add Leonxlnx/taste-skill`, then `/plugin install taste-skill@taste-skill` |
+| [Emil Kowalski's skills](https://github.com/emilkowalski/skills) | Motion and shadow values, and hover, press and focus states that feel right in the base components. | `npx skills@latest add emilkowalski/skills` |
+| [Playwright CLI](https://github.com/microsoft/playwright-cli) | Screenshots at desktop and mobile widths to check the look when there's no browser tool. | `npm install -g @playwright/cli@latest && playwright-cli install --skills` |
+
+If Claude Code doesn't find Superpowers or frontend-design, add the official marketplace first: `/plugin marketplace add anthropics/claude-plugins-official`.
 
 ---
 
@@ -237,7 +242,7 @@ New stacks and UI platforms are the most useful contributions; [CONTRIBUTING.md]
   marketplace.json           # this repo is also its own marketplace
 skills/kickstart/
   SKILL.md                   # /kickstart
-  references/                # loaded on demand: Superpowers, mini-design, stacks, scaffolding, generation, design system
+  references/                # loaded on demand: Superpowers, mini-design, stacks, scaffolding, generation, design system, design skills
   templates/_base/           # generic templates
   templates/<stack>/         # stack.md (commands, scaffold, conventions) and overrides
   templates/_design-system/  # tokens, DESIGN.md, component inventory and contract, one file per platform

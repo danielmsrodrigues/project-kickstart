@@ -20,7 +20,7 @@ Read the templates you need in one batch (parallel reads), then write the indepe
   - Commands follow "Real beats default"; drop a line when no working command exists for it.
   - Structure is the real tree; planned directories are marked `(planned)`.
   - Conventions are only the three to six rules an agent would get wrong; the rest stays in CONVENTIONS.md.
-  - The Superpowers line appears only if Superpowers is installed. The UI block appears only if 3b ran, and frontend-design is mentioned there only if it's installed.
+  - The Superpowers line appears only if Superpowers is installed. The UI block appears only if 3b ran, and frontend-design and the design skills (`design-skills.md`) are mentioned there only if they're installed.
 - **ARCHITECTURE.md:** what's decided. Unknowns go under "Open questions".
 - **CONVENTIONS.md:** the `stack.md` conventions plus what the design or code establishes. Name the linter or formatter instead of restating its rules.
 - **ADR 0001:** the design's main decision, with a short imperative title and today's date. Its options are the approaches actually considered. If none were, say so instead of inventing any.
