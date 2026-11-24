@@ -20,7 +20,7 @@ Look first: `tokens.*`, CSS full of `--color-*` variables, a Tailwind theme, a S
 
 One question, four choices, as buttons when you have the question tool. Ask it even when the user said to go ahead without them, unless a source is already in the repo or the conversation. When nothing in the repo or the conversation points at a source, put **c) None** first, marked as recommended.
 
-- **a) Claude Design export or handoff**, or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../kickstart-design/references/design-import.md`.
+- **a) Claude Design**: a canvas link (a `claude.ai/artifact/…` of the Design type) or an older export or handoff; or **b) another source** (a tokens file, Figma variables, a reference site or app): read `<skill>/../kickstart-design/references/design-import.md`.
 - **d) An existing brand** (a known company, the client's own identity): the look is the brand's, not ours to invent.
   - **Who it's for.** Confirm, in one line, that the project is for the brand or with its permission (client, agency, in-house). If it isn't, say that using a real brand's identity without permission can infringe its trademark, and offer to build in a neutral style instead.
   - **What to ask for:** the brand guidelines, logo files (SVG preferred), official colors, the typefaces and whether the project may use them (license), and any existing app or site to match. Take values exactly from these sources. A value read from a live site is marked as derived.
@@ -29,13 +29,12 @@ One question, four choices, as buttons when you have the question tool. Ask it e
 - **c) None.** Ask two or three questions, one per message, skipping what the design step answered: the tone (three words, and who uses it), references they like and why, what to avoid.
 
   Then ask the **depth**, once, as buttons. Recommend **Crafted** for a product with screens people will judge by its look:
-  - **Crafted**: research references (Dribbble, Behance, Mobbin, modern sites, the product's physical world), draw three directions on a real screen of the app, and design the product's signature components. About twice the cost of this step. Follow `design-research.md`, then continue at the contrast check below.
+  - **Crafted**: one direction drawn as a real page on a Claude Design canvas, with photographs, reviewed by the design skills before the user sees it, then refined by the user on the canvas; plus the product's signature components. About twice the cost of this step. When your Artifact tool lists the "Design" type, follow `design-canvas.md` (it runs the generic-defaults and contrast checks itself, then continues at "2. Tokens"); otherwise follow `design-research.md`, then continue at the contrast check below.
   - **Quick**: one direction, proposed in text, as follows.
-  - if impeccable is installed (or taste-skill, for a marketing or company site), take the direction as `design-skills.md` says;
   - otherwise, if `frontend-design` is available, invoke it and take its direction;
   - otherwise propose one yourself: a one-sentence direction, a 4-6 color palette, one or two type families with a scale, a spacing scale.
 
-  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults; with impeccable, its absolute bans in `craft-floor.md`; with taste-skill, on a site, its anti-slop rules. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why.
+  **Check the direction against generic defaults before showing it**, including any direction already written in a spec or the conversation: those are input, not decided. With `frontend-design`, use its list of defaults; with impeccable, its absolute bans in `craft-floor.md`. Without it, use the seed list in the "Avoid" section of `templates/_design-system/DESIGN.md`. Common examples are cream with terracotta and a serif display, black with one neon accent, and identical rounded cards with soft grey shadows. If the direction matches one and the user didn't ask for it by name, revise it and say what you changed and why.
 
   **Then compute contrast; never estimate it.** List every pair the design will actually use: each text color on each background, the text on every filled button, badge and status color (such as a "ready" pill), and borders and focus rings on the backgrounds, in light and dark. Run `python3 <skill>/scripts/build_tokens.py contrast --pairs "FG:BG" ...` (add `:3` for borders and focus rings). Fix every FAIL before showing anything; the user is not expected to catch contrast problems. Show the ratios from the script output, not your own. Then show the direction and get a yes.
 
@@ -66,7 +65,7 @@ In step 4:
 
 ## 3. Components
 
-The six in `components-spec.md`, in the platform's idiom and location, shown in every variant by the published design system (`references/preview.md`). With a component library, follow "Component libraries" in `platforms/other.md`. For UI code, follow `design-skills.md` (impeccable's craft floor, Emil Kowalski's interaction rules); otherwise invoke `frontend-design` when available.
+The six in `components-spec.md` (plus any signature components from the crafted depth), in the platform's idiom and location, shown in every variant by the published design system (`references/preview.md`). With a component library, follow "Component libraries" in `platforms/other.md`. For UI code, follow `design-skills.md` (impeccable's craft floor, Emil Kowalski's interaction rules); otherwise invoke `frontend-design` when available.
 
 ## 4. Docs
 

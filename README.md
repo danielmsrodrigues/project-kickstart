@@ -42,7 +42,7 @@ You don't have to choose the technology. If you don't say, Claude suggests one a
 **3. Answer the questions.** Most come with ready-made answers to click, with the recommended one first. Then:
 
 - Claude shows you **the full list** of what it will do: commands to run, files to create, files to change. **Nothing happens until you say yes.**
-- If the project has screens, it asks **where the design comes from**: a Claude Design export, another file, or nothing yet. With nothing yet, it asks about the look you want (for example "warm and classic, nothing like a generic app") and proposes colors and fonts for you to approve.
+- If the project has screens, it asks **where the design comes from**: a Claude Design canvas or export, another file, or nothing yet. With nothing yet, it asks about the look you want (for example "warm and classic, nothing like a generic app"). Then it either proposes colors and fonts for you to approve, or, at the crafted depth, draws the main page on a Claude Design canvas with real photographs, has it reviewed, and lets you refine it there before turning it into code.
 - At the end it asks before saving anything to git.
 
 A complete kickstart takes about 10 to 20 minutes, most of it Claude working while you wait.
@@ -164,11 +164,9 @@ All are optional. Install them and project-kickstart uses them automatically.
 |--------|--------------|---------|
 | [Superpowers](https://github.com/obra/superpowers) | A better design conversation before anything is built, and a step-by-step plan for building the app afterwards. | `/plugin install superpowers@claude-plugins-official` |
 | [frontend-design](https://github.com/anthropics/claude-plugins-public/tree/main/plugins/frontend-design) | A more distinctive look when the design starts from scratch, and better-looking screens later. | `/plugin install frontend-design@claude-plugins-official` |
-
-| [impeccable](https://github.com/pbakaus/impeccable) | Leads the look of app screens, writes `docs/PRODUCT.md` so later design work knows the product, and audits the base components before they're done. | `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` |
-| [taste-skill](https://github.com/Leonxlnx/taste-skill) | Leads the look when the project has a marketing or company site (only that site, not the app screens). | `/plugin marketplace add Leonxlnx/taste-skill`, then `/plugin install taste-skill@taste-skill` |
-| [Emil Kowalski's skills](https://github.com/emilkowalski/skills) | Motion and shadow values, and hover, press and focus states that feel right in the base components. | `npx skills@latest add emilkowalski/skills` |
-| [Playwright CLI](https://github.com/microsoft/playwright-cli) | Screenshots at desktop and mobile widths to check the look when there's no browser tool. | `npm install -g @playwright/cli@latest && playwright-cli install --skills` |
+| [impeccable](https://github.com/pbakaus/impeccable) | Reviews the first draft of the look before you see it, writes `docs/PRODUCT.md` so later design work knows the product, and audits the base components. | `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` |
+| [Emil Kowalski's skills](https://github.com/emilkowalski/skills) | Reviews the interactions of the first draft, and sets motion, shadows and the hover, press and focus states of the components. | `npx skills@latest add emilkowalski/skills` |
+| [Playwright CLI](https://github.com/microsoft/playwright-cli) | Screenshots of the built app and the design-system page at desktop and phone widths. | `npm install -g @playwright/cli@latest && playwright-cli install --skills` |
 
 If Claude Code doesn't find Superpowers or frontend-design, add the official marketplace first: `/plugin marketplace add anthropics/claude-plugins-official`.
 
@@ -181,7 +179,7 @@ If Claude Code doesn't find Superpowers or frontend-design, add the official mar
 1. **Design.** With Superpowers installed, the design runs through its `brainstorming` skill. Without it, up to five questions of its own, one at a time, skipping what the repo already answers.
 2. **Detect the stack** from `package.json`, `*.csproj`, `Package.swift`, `pyproject.toml`, `go.mod`, `Cargo.toml`, ... and read the real commands from them.
 3. **Propose the list** (`run`, `create`, `edit`, `exists` lines) and wait for a yes. Choices are asked through `AskUserQuestion` when available.
-4. **Design system** for UI projects: origin (Claude Design, another source, or none), `design/tokens.json` in W3C DTCG format, generated native tokens, six base components, `docs/DESIGN.md`, an inventory, and a lint warning for hardcoded values. An existing system is documented, never duplicated.
+4. **Design system** for UI projects: origin (Claude Design, another source, or none; with none, the crafted depth draws one reviewed page on a Claude Design canvas), `design/tokens.json` in W3C DTCG format, generated native tokens, six base components, `docs/DESIGN.md`, an inventory, and a lint warning for hardcoded values. An existing system is documented, never duplicated.
 5. **Scaffold and generate.** The official scaffolder runs first (create-vite, create-next-app, `uv init`, `dotnet new`, `swift package init`, `cargo init`, `go mod init`): in a temporary directory if the folder isn't empty, with git turned off. Then dependencies are installed, files written, and checks run: build, test, lint, `CLAUDE.md` ≤ 80 lines, no placeholders, links resolve, valid JSON, token build, hardcoded-value check.
 6. **Git:** `git init` and the initial commit only after a yes.
 7. **Hand off** to Superpowers' `writing-plans` when it's installed.
@@ -242,7 +240,7 @@ New stacks and UI platforms are the most useful contributions; [CONTRIBUTING.md]
   marketplace.json           # this repo is also its own marketplace
 skills/kickstart/
   SKILL.md                   # /kickstart
-  references/                # loaded on demand: Superpowers, mini-design, stacks, scaffolding, generation, design system, design skills
+  references/                # loaded on demand: Superpowers, mini-design, stacks, scaffolding, generation, design system, design canvas, design skills
   templates/_base/           # generic templates
   templates/<stack>/         # stack.md (commands, scaffold, conventions) and overrides
   templates/_design-system/  # tokens, DESIGN.md, component inventory and contract, one file per platform

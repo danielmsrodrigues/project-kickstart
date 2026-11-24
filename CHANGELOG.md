@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] - 2026-11-24
+
+### Changed
+
+- **The crafted direction is drawn on a Claude Design canvas** (`references/design-canvas.md`), when the Artifact tool offers the "Design" type:
+  - one direction, as a real page: the whole landing page, or the app's main screen;
+  - photographs: the user's own, or licensed stand-ins picked one by one;
+  - reviewed before the user sees it: impeccable's critique and detector from the source, Emil Kowalski's skill on the interactions, then one look at the rendered page in Claude in Chrome;
+  - refined by the user on the canvas, then imported into `design/tokens.json`, with the canvas linked from `docs/DESIGN.md`.
+  - The old three-directions flow stays as the fallback without the Design type.
+- **Design skills review; they don't invent.** In testing, skills asked to invent a direction produced generic pages, and reviewing a first draft worked. impeccable and Emil Kowalski's skills now review the first draft, the components and the build.
+- **taste-skill is no longer used.** Its directions came out generic in testing.
+- **Claude Design origin** accepts a canvas link. Standalone Claude Design closes on 14 December 2026.
+
+### Fixed
+
+- The "Works best with" table in the README was split in two by a blank line.
+
 ## [0.8.1] - 2026-11-23
 
 ### Fixed
