@@ -1,6 +1,6 @@
 # Crafted design direction: research, three directions, signature pieces
 
-Read this in step 3b when the user chose the crafted depth. It replaces the single text proposal of origin (c). It may also refine a direction from origin (a) or (b) when the user asks. The goal is a direction a design team would sign off: grounded in real references, chosen from options the user has *seen*, and carried into the product's own pieces.
+Read this in step 3b when the user chose the crafted depth and your Artifact tool has no "Design" type; with it, follow `design-canvas.md` instead. It replaces the single text proposal of origin (c). It may also refine a direction from origin (a) or (b) when the user asks. The goal is a direction a design team would sign off: grounded in real references, chosen from options the user has *seen*, and carried into the product's own pieces.
 
 ## 1. Research (a mood board, not a copy)
 
@@ -48,7 +48,7 @@ Make **three directions that genuinely differ**, each a different answer to the 
 Each direction must pass the generic-defaults check in `design-system.md` and the contrast script (`contrast --pairs`) before it's shown.
 
 **Draw them, each as a real page.** Each direction gets its own full page at real size, as it would ship: 1440 wide, the first screen and at least two more sections for a site, or the main screen for an app. Never three miniatures side by side.
-- **Who draws.** For a marketing, company or portfolio site, invoke `taste-skill:design-taste-frontend` with the Skill tool and let it build each page with its own process, checker and finish gate. For app screens, invoke `impeccable:impeccable` and build each page through its new-work flow. Neither installed: invoke `frontend-design`; none: draw them yourself. `design-skills.md` says what else each one adds.
+- **Who draws.** You, with `frontend-design` when it's available. Then review each page as `design-canvas.md` step 4 says (impeccable and Emil Kowalski's skills, when installed) before showing it.
 - **Imagery.** When the product sells something people look at (spaces, buildings, food, objects, people), the page shows photographs: ones the user gave, or licensed stand-ins named as stand-ins. Never fake a picture with boxes, lines or CSS shapes.
 - **The bar.** Before showing a page, ask: would a good design team publish it as it is? Placeholder names, a form where a button would do, a gimmick standing in for content, or text where an image belongs mean no. The three must differ in layout, type, color and imagery, not just tint.
 - **Copy:** real, in the product's language. Fonts: Google Fonts or the skill's own sources.

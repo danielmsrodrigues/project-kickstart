@@ -58,7 +58,7 @@ Flag commands that can't work yet. Then wait for the yes; this can't be skipped 
 
 ### 3b. Design system (projects with a UI)
 
-Read `references/design-skills.md` first: it says which of impeccable, taste-skill, Emil Kowalski's skills and Playwright are installed and what each one takes over. Then read `references/design-system.md` and follow it. It covers asking where the design comes from (Claude Design, another source, an existing brand, or none), how deep to go (a quick direction, or crafted: research on Dribbble, Behance, Mobbin and modern sites, three drawn directions and signature components), documenting an existing system instead of building a parallel one, the tokens, the base components, `DESIGN.md`, the inventory and the lint rule. It ends with its own additions to the list and a yes. A CLI, API or library skips 3b.
+Read `references/design-skills.md` first: it says which of impeccable, Emil Kowalski's skills and Playwright are installed and when each one reviews the work. Then read `references/design-system.md` and follow it. It covers asking where the design comes from (Claude Design, another source, an existing brand, or none), how deep to go (a quick direction, or crafted: research on Dribbble, Behance, Mobbin and modern sites, three drawn directions and signature components), documenting an existing system instead of building a parallel one, the tokens, the base components, `DESIGN.md`, the inventory and the lint rule. It ends with its own additions to the list and a yes. A CLI, API or library skips 3b.
 
 ### 4. Generate
 
@@ -92,6 +92,7 @@ A project that already has a design system and a new Claude Design, Figma or tok
 | Leftover `{{PLACEHOLDER}}` or TODO sections | Fill them or delete the section. |
 | A second design system next to an existing one | Document and extend the one that's there. |
 | Applying a design export directly | `/kickstart-design`: diff first, apply on a yes. |
-| Letting impeccable or taste-skill write a root `DESIGN.md` or app code | They advise; this skill writes `docs/DESIGN.md`, `docs/PRODUCT.md` and the tokens. |
-| Applying taste-skill's website rules to app screens | taste-skill is for marketing and company sites only. |
+| Letting impeccable write a root `DESIGN.md` or app code | It reviews; this skill writes `docs/DESIGN.md`, `docs/PRODUCT.md` and the tokens. |
+| Drawing three directions at once | One direction on a Claude Design canvas, reviewed, then refined by the user (`design-canvas.md`). |
+| Showing the canvas before the review | impeccable and Emil review the first draft first; one look at the rendered page catches the rest. |
 | Reading `build_tokens.py` or a template just to copy it | `kickstart_files.py` copies; `--help` explains. |
